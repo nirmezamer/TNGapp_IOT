@@ -1,20 +1,14 @@
-// DogWalker.js
+// GoodEntrance.js
 import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 
-export default function DogWalker({ navigation }) {
+export default function GoodEntrance({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Dog Walker Page</Text>
+      <Text style={styles.title}>Welcome to the Good Entrance</Text>
       <View style={styles.buttonContainer}>
-        <Button 
-          title="Find A Job" 
-          onPress={() => {/* Add navigation or function here */}} 
-        />
-        <Button 
-          title="Work A Job" 
-          onPress={() => navigation.navigate('WorkAJob')} // Navigate to WorkAJob page
-        />
+        <Button title="Dog Owner" onPress={() => navigation.navigate('DogOwner')} />
+        <Button title="Dog Walker" onPress={() => navigation.navigate('DogWalker')} />
       </View>
     </View>
   );
@@ -34,9 +28,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
+    width: '80%',
+    maxWidth: 300,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    maxWidth: 400,
+    justifyContent: 'space-between',
   },
 });

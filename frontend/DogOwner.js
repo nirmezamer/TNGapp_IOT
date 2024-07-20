@@ -9,21 +9,18 @@ const DogOwner = () => {
   const goToRequestATrip = () => {
     navigation.navigate('RequestATrip');
   };
-
-  const increaseCounter = () => {
-    // Logic for increasing the counter (if needed)
+  
+  const goToWhereIsMyDog = () => {
+    navigation.navigate('WhereIsMyDog');
   };
 
-  const decreaseCounter = () => {
-    // Logic for decreasing the counter (if needed)
-  };
+  
 
   return (
     <View style={styles.container}>
       <Text style={styles.counterText}>Counter: 0</Text>
       <View style={styles.buttonContainer}>
-        <Button title="Increase" onPress={increaseCounter} />
-        <Button title="Decrease" onPress={decreaseCounter} />
+        <Button title="Where Is My Dog?" onPress={goToWhereIsMyDog} />
         <Button title="Request A Trip" onPress={goToRequestATrip} />
       </View>
     </View>
