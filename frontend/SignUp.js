@@ -13,7 +13,8 @@ export default function SignUp({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Come join us!</Text>
+      <Text style={styles.nontitle}>Please register below</Text>
       <TextInput placeholder="First Name" style={[styles.input, { width: inputWidth }]} />
       <TextInput placeholder="Last Name" style={[styles.input, { width: inputWidth }]} />
       <TextInput placeholder="Email" style={[styles.input, { width: inputWidth }]} />
@@ -36,6 +37,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  nontitle: {
+    fontSize: 20,
+    fontWeight: 'normal',
     marginBottom: 20,
   },
   input: {

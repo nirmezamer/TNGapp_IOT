@@ -5,7 +5,8 @@ import { StyleSheet, View, Text, Button } from 'react-native';
 export default function GoodEntrance({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to the Good Entrance</Text>
+      <Text style={styles.title}>Welcome to the App!</Text>
+      <Text style={styles.nontitle}>Who are you today?</Text>
       <View style={styles.buttonContainer}>
         <Button title="Dog Owner" onPress={() => navigation.navigate('DogOwner')} />
         <Button title="Dog Walker" onPress={() => navigation.navigate('DogWalker')} />
@@ -25,6 +26,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  nontitle: {
+    fontSize: 20,
+    fontWeight: 'normal',
     marginBottom: 20,
   },
   buttonContainer: {
