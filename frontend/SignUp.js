@@ -1,6 +1,6 @@
 // SignUp.js
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, Dimensions } from 'react-native';
 
 export default function SignUp({ navigation }) {
   const handleSignUp = () => {
@@ -8,11 +8,16 @@ export default function SignUp({ navigation }) {
     navigation.navigate('Home'); // Navigate to Home page (landing page) after sign up
   };
 
+  const screenWidth = Dimensions.get('window').width;
+  const inputWidth = screenWidth / 3; // 1/3 of the page width
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
-      <TextInput placeholder="Email" style={styles.input} />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} />
+      <TextInput placeholder="First Name" style={[styles.input, { width: inputWidth }]} />
+      <TextInput placeholder="Last Name" style={[styles.input, { width: inputWidth }]} />
+      <TextInput placeholder="Email" style={[styles.input, { width: inputWidth }]} />
+      <TextInput placeholder="Password" secureTextEntry style={[styles.input, { width: inputWidth }]} />
       <View style={styles.buttonContainer}>
         <Button title="Sign Up" onPress={handleSignUp} />
       </View>
@@ -37,7 +42,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: '100%',
     marginBottom: 15,
     paddingHorizontal: 10,
   },
