@@ -1,45 +1,11 @@
 // SignIn.js
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
-export default function SignIn({ navigation }) {
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const messageListener = (event) => {
-      if (event.origin !== window.location.origin) {
-        // Ignore messages from other origins
-        return;
-      }
-      if (event.data === 'success') {
-        navigation.navigate('GoodEntrance');
-      } else if (event.data === 'error') {
-        setErrorMessage('Login failed. Please try again.');
-      }
-    };
-
-    // Listen for messages from the popup window
-    window.addEventListener('message', messageListener);
-
-    return () => {
-      window.removeEventListener('message', messageListener);
-    };
-  }, [navigation]);
-
+export default function SignIn() {
   const handleGoogleSignIn = () => {
-    const backendUrl = 'http://localhost:7071/api/auth/google'; // Update to match your Azure Function URL
-
-    // Open a new window for Google sign-in
-    const width = 500;
-    const height = 600;
-    const left = (window.innerWidth / 2) - (width / 2);
-    const top = (window.innerHeight / 2) - (height / 2);
-
-    window.open(
-      backendUrl,
-      'GoogleSignIn',
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
+    // Navigate to the backend endpoint for Google OAuth
+    window.location.href = 'http://localhost:7071/api/auth/google'; // Update to match your Azure Function URL
   };
 
   return (
@@ -51,7 +17,6 @@ export default function SignIn({ navigation }) {
         />
       </View>
       <Text style={styles.title}>Sign In with Google</Text>
-      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
         <Image
           source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png' }}
@@ -104,9 +69,5 @@ const styles = StyleSheet.create({
   googleButtonText: {
     color: '#333',
     fontSize: 16,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 20,
   },
 });

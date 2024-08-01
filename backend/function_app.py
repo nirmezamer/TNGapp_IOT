@@ -80,32 +80,14 @@ def callback(req: func.HttpRequest) -> func.HttpResponse:
 
         if userinfo_response.json().get("email_verified"):
             # Redirect to the front-end page with a success message
-            return func.HttpResponse(f"""
-                <html>
-                    <head>
-                        <script type="text/javascript">
-                            window.opener.postMessage("success", "*");
-                            window.close();
-                        </script>
-                    </head>
-                </html>
-            """, status_code=200)
+            return func.HttpResponse(status_code=302, headers={"Location": "http://localhost:8081/GoodEntrance"})  # Update to match your frontend URL
         else:
             logging.error("User email not verified")
-            return func.HttpResponse(f"""
-                <html>
-                    <head>
-                        <script type="text/javascript">
-                            window.opener.postMessage("error", "*");
-                            window.close();
-                        </script>
-                    </head>
-                </html>
-            """, status_code=400)
+            return func.HttpResponse("User email not verified", status_code=400)
     except Exception as e:
         logging.error(f"Error in callback: {e}")
-        return func.HttpResponse(f"Error in callback: {e}", status_code=500)   
-
+        return func.HttpResponse(f"Error in callback: {e}", status_code=500)
+    
 # Our other functions (HttpExample, DecreaseCounter, IncreaseCounter, ReadCounter, negotiate) remain the same
 @app.route(route="HttpExample")
 def HttpExample(req: func.HttpRequest) -> func.HttpResponse:
