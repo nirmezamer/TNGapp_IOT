@@ -12,6 +12,7 @@ import SignIn from './SignIn'; // Import SignIn
 import SignUp from './SignUp'; // Import SignUp
 import GoodEntrance from './GoodEntrance'; // Import GoodEntrance
 import WorkAJob from './WorkAJob'; // Import GoodEntrance
+import "./app.css";
 
 const dogImage = require('./dog_pic.jpg'); // Path to your image
 

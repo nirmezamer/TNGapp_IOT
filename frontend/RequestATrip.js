@@ -14,7 +14,7 @@ const cities = [
 ];
 
 const RequestATrip = () => {
-  const [ownerName, setQwnerName] = useState('');
+  const [ownerName, setOwnerName] = useState('');
   const [dogName, setDogName] = useState('');
   const [city, setCity] = useState('Tel Aviv');
   const [address, setAddress] = useState('');
@@ -64,7 +64,7 @@ const RequestATrip = () => {
       <TextInput
         style={styles.input}
         value={ownerName}
-        onChangeText={setQwnerName}
+        onChangeText={setOwnerName}
       />
 
       <Text style={styles.label}>Dog Name:</Text>
