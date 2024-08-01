@@ -28,9 +28,9 @@ Content-Type: application/json
 
 {
     "PartitionKey": "Jobs",
-    "RowKey": "1",
-    "Owner": "Nir Mezamer",
-    "DogName": "Dino",
+    "RowKey": "2",
+    "Owner": "Guy Shpigler",
+    "DogName": "Oren",
     "startDate": "01-09-2024",
     "startTime": "10:00",
     "endDate": "01-09-2024",
@@ -43,6 +43,10 @@ POST http://localhost:7071/api/RemoveJob
 Content-Type: application/json
 
 {
-    "PartitionKey": "Jobs",
-    "RowKey": "1"
+    "PartitionKey": "counters",
+    "RowKey": "counter_0"
 }
+
+###
+
+GET http://localhost:7071/api/GetAllJobs
