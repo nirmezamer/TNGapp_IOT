@@ -1,6 +1,6 @@
 // SignIn.js
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
 export default function SignIn() {
   const handleGoogleSignIn = () => {
@@ -8,18 +8,13 @@ export default function SignIn() {
     window.location.href = 'http://localhost:7071/api/auth/google'; // Update to match your Azure Function URL
   };
 
-  // Get screen width
-  const screenWidth = Dimensions.get('window').width;
-  // Set input width to 1/3 of screen width
-  const inputWidth = screenWidth / 3;
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
-      <TextInput placeholder="Email" style={styles.input} />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} />
-      <View style={styles.buttonContainer}>
-        <Button title="Sign In" onPress={handleSignIn} />
+      <View style={styles.logoContainer}>
+        <Image
+          source={{ uri: 'https://your-logo-url.com/logo.png' }} // Replace with your logo URL
+          style={styles.logo}
+        />
       </View>
       <Text style={styles.title}>Sign In with Google</Text>
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
@@ -55,13 +50,21 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 20,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+  googleButton: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    paddingVertical: 15,
     width: '100%',
-    marginBottom: 15,
-    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    borderColor: '#ccc',
+    borderWidth: 1,
+  },
+  googleLogo: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   googleButtonText: {
     color: '#333',
