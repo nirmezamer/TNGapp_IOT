@@ -4,3 +4,8 @@
 
 azure-functions
 azure-data-tables
+azure-functions
+requests
+requests-oauthlib
+oauthlib
+python-dotenv
