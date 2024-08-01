@@ -6,7 +6,13 @@ import json
 import requests
 from azure.data.tables import TableClient
 
+from module.jobs import jobs
+
+# create a function app
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+
+# register the services
+app.register_functions(jobs)
 
 @app.route(route="HttpExample")
 def HttpExample(req: func.HttpRequest) -> func.HttpResponse:
