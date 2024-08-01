@@ -3,6 +3,7 @@ import logging
 import os
 import json
 import requests
+from azure.data.tables import TableClient
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import WebApplicationClient
 from dotenv import load_dotenv
@@ -17,6 +18,9 @@ GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 REDIRECT_URI = "http://localhost:7071/api/auth/google/callback"  # Use the local redirect URI
 
+from module.jobs import jobs
+
+# create a function app
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 def get_google_provider_cfg():
@@ -89,6 +93,9 @@ def callback(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(f"Error in callback: {e}", status_code=500)
     
 # Our other functions (HttpExample, DecreaseCounter, IncreaseCounter, ReadCounter, negotiate) remain the same
+# register the services
+app.register_functions(jobs)
+
 @app.route(route="HttpExample")
 def HttpExample(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
