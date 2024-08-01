@@ -14,6 +14,8 @@ const cities = [
 ];
 
 const RequestATrip = () => {
+  const [ownerName, setQwnerName] = useState('');
+  const [dogName, setDogName] = useState('');
   const [city, setCity] = useState('Tel Aviv');
   const [address, setAddress] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
@@ -21,8 +23,7 @@ const RequestATrip = () => {
   const [phone, setPhone] = useState('+972');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [dogName, setDogName] = useState('');
-
+  
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -58,6 +59,21 @@ const RequestATrip = () => {
 
   return (
     <View style={styles.container}>
+
+      <Text style={styles.label}>Owner Name:</Text>
+      <TextInput
+        style={styles.input}
+        value={ownerName}
+        onChangeText={setQwnerName}
+      />
+
+      <Text style={styles.label}>Dog Name:</Text>
+      <TextInput
+        style={styles.input}
+        value={dogName}
+        onChangeText={setDogName}
+      />
+
       <Text style={styles.label}>City:</Text>
       <RNPickerSelect
         style={pickerSelectStyles}
@@ -113,13 +129,6 @@ const RequestATrip = () => {
         mode="time"
         onConfirm={handleTimeConfirm}
         onCancel={() => setTimePickerVisibility(false)}
-      />
-
-      <Text style={styles.label}>Dog Name:</Text>
-      <TextInput
-        style={styles.input}
-        value={dogName}
-        onChangeText={setDogName}
       />
 
       <Button title="Submit Request" onPress={handleSubmit} />
