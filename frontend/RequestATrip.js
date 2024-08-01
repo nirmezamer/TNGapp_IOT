@@ -1,8 +1,9 @@
 // RequestATrip.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const cities = [
   { label: 'Tel Aviv', value: 'Tel Aviv' },
@@ -21,25 +22,7 @@ const RequestATrip = () => {
   const [houseNumber, setHouseNumber] = useState('');
   const [apartmentNumber, setApartmentNumber] = useState('');
   const [phone, setPhone] = useState('+972');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-
-  const handleDateConfirm = (date) => {
-    setSelectedDate(date);
-    setDate(date.toLocaleDateString());
-    setDatePickerVisibility(false);
-  };
-
-  const handleTimeConfirm = (time) => {
-    setSelectedTime(time);
-    setTime(time.toLocaleTimeString());
-    setTimePickerVisibility(false);
-  };
+  const [date, setDate] = useState(new Date());
 
   const handleSubmit = () => {
     if (houseNumber > 300 || apartmentNumber > 300) {
@@ -114,21 +97,11 @@ const RequestATrip = () => {
       />
 
       <Text style={styles.label}>Date:</Text>
-      <Button title="Select Date" onPress={() => setDatePickerVisibility(true)} />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleDateConfirm}
-        onCancel={() => setDatePickerVisibility(false)}
-      />
-
-      <Text style={styles.label}>Time:</Text>
-      <Button title="Select Time" onPress={() => setTimePickerVisibility(true)} />
-      <DateTimePickerModal
-        isVisible={isTimePickerVisible}
-        mode="time"
-        onConfirm={handleTimeConfirm}
-        onCancel={() => setTimePickerVisibility(false)}
+      <DatePicker
+        selected={date}
+        onChange={(date) => setDate(date)}
+        dateFormat="dd/MM/yyyy"
+        className="datepicker-input"
       />
 
       <Button title="Submit Request" onPress={handleSubmit} />
@@ -152,6 +125,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+    marginVertical: 10,
+    width: '100%',
+  },
+  datepickerInput: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+    width: '100%',
   },
 });
 
@@ -163,6 +147,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 10,
+    width: '100%',
   },
   inputAndroid: {
     height: 40,
@@ -171,6 +156,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 10,
+    width: '100%',
   },
 });
 
