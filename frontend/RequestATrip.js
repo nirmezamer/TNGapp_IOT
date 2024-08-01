@@ -1,6 +1,6 @@
 // RequestATrip.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -23,6 +23,7 @@ const RequestATrip = () => {
   const [apartmentNumber, setApartmentNumber] = useState('');
   const [phone, setPhone] = useState('+972');
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
 
   const handleSubmit = () => {
     if (houseNumber > 300 || apartmentNumber > 300) {
@@ -104,6 +105,19 @@ const RequestATrip = () => {
         className="datepicker-input"
       />
 
+      <Text style={styles.label}>Time:</Text>
+      <DatePicker
+        selected={time}
+        onChange={(time) => setTime(time)}
+        showTimeSelect
+        showTimeSelectOnly
+        timeIntervals={30}
+        timeCaption="Time"
+        dateFormat="HH:mm"
+        timeFormat="HH:mm"
+        className="timepicker-input"
+      />
+
       <Button title="Submit Request" onPress={handleSubmit} />
     </View>
   );
@@ -120,15 +134,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginVertical: 10,
-    width: '100%',
-  },
-  datepickerInput: {
     height: 40,
     borderColor: '#ddd',
     borderWidth: 1,
