@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as Linking from 'expo-linking';
 import DogOwner from './DogOwner';
 import RequestATrip from './RequestATrip';
 import DogWalker from './DogWalker';
@@ -80,9 +81,27 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export default function App() {
+  const linking = {
+    prefixes: [Linking.createURL('/')],
+    config: {
+      screens: {
+        Home: '',
+        SignIn: 'signin',
+        SignUp: 'signup',
+        GoodEntrance: 'GoodEntrance',
+        DogOwner: 'DogOwner',
+        DogWalker: 'DogWalker',
+        RequestATrip: 'RequestATrip',
+        WhereIsMyDog: 'WhereIsMyDog',
+        WorkAJob: 'WorkAJob',
+      },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
