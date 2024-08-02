@@ -4,6 +4,8 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import setHours from 'date-fns/setHours';
+import setMinutes from 'date-fns/setMinutes';
 
 const cities = [
   { label: 'Tel Aviv', value: 'Tel Aviv' },
@@ -23,7 +25,8 @@ const RequestATrip = () => {
   const [apartmentNumber, setApartmentNumber] = useState('');
   const [phone, setPhone] = useState('+972');
   const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(setHours(setMinutes(new Date(), 0), 0));
+  const [duration, setDuration] = useState(setHours(setMinutes(new Date(), 0), 0));
 
   const handleSubmit = () => {
     if (houseNumber > 300 || apartmentNumber > 300) {
@@ -39,6 +42,12 @@ const RequestATrip = () => {
 
     // Handle form submission logic here
     Alert.alert('Success', 'Trip Request Submitted');
+  };
+
+  // Limit duration to be between 00:00 and 01:00
+  const filterTime = (time) => {
+    const currentHour = time.getHours();
+    return currentHour < 1;
   };
 
   return (
@@ -111,11 +120,29 @@ const RequestATrip = () => {
         onChange={(time) => setTime(time)}
         showTimeSelect
         showTimeSelectOnly
-        timeIntervals={30}
+        timeIntervals={15}
         timeCaption="Time"
         dateFormat="HH:mm"
         timeFormat="HH:mm"
         className="timepicker-input"
+        minTime={setHours(setMinutes(new Date(), 0), 0)}
+        maxTime={setHours(setMinutes(new Date(), 59), 23)}
+      />
+
+      <Text style={styles.label}>Duration:</Text>
+      <DatePicker
+        selected={duration}
+        onChange={(time) => setDuration(time)}
+        showTimeSelect
+        showTimeSelectOnly
+        timeIntervals={15}
+        timeCaption="Duration"
+        dateFormat="HH:mm"
+        timeFormat="HH:mm"
+        className="timepicker-input"
+        filterTime={filterTime}
+        minTime={setHours(setMinutes(new Date(), 0), 0)}
+        maxTime={setHours(setMinutes(new Date(), 0), 1)}
       />
 
       <Button title="Submit Request" onPress={handleSubmit} />
