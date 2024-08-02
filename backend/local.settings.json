@@ -1,0 +1,14 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=guytable;AccountKey=LyBjTT/1PED2wt4aNLli1C80nTipjNOpX1GIbgDXjrl86+ZIi/O0gf51tUPCe8BEw98IzC5eE88i+ASthjnaTA==;EndpointSuffix=core.windows.net",
+      "FUNCTIONS_WORKER_RUNTIME": "python",
+      "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+      "AzureSignalRConnectionString": "Endpoint=https://tngsig.service.signalr.net;AccessKey=tBXL41zULk3TPcadGRdG3wMYgjkwO9SQy9+oY9UJDOk=;Version=1.0;",
+      "GOOGLE_CLIENT_ID": "1065837839936-b3et77d53qjued90epvu05ama0acvj0p.apps.googleusercontent.com",
+      "GOOGLE_CLIENT_SECRET": "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"
+    },
+    "Host": {
+      "CORS": "*"
+    }
+}
