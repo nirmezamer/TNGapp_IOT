@@ -12,8 +12,8 @@ const DogOwner = () => {
     navigation.navigate('RequestATrip');
   };
   
-  const goToWhereIsMyDog = () => {
-    navigation.navigate('WhereIsMyDog');
+  const goToGetAllUserJobs = () => {
+    navigation.navigate('GetAllUserJobs');
   };
 
   return (
@@ -24,7 +24,7 @@ const DogOwner = () => {
       <Text style={styles.nontitle}>What would you like to do?</Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="Where Is My Dog?" onPress={goToWhereIsMyDog} />
+        <Button title="All my Jobs" onPress={goToGetAllUserJobs} />
         <Button title="Request A Trip" onPress={goToRequestATrip} />
       </View>
     </View>

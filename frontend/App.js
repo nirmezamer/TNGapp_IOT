@@ -14,6 +14,8 @@ import GoodEntrance from './GoodEntrance'; // Import GoodEntrance
 import WorkAJob from './WorkAJob'; // Import WorkAJob
 import JobDetails from './JobDetails'; // Import JobDetails (new page)
 import HomeButton from './HomeButton'; // Import HomeButton
+import GetAllUserJobs from './GetAllUserJobs'; // Import GetAllUserJobs
+import UserJobList from './UserJobList'; // Import UserJobList
 import "./app.css";
 
 const dogImage = require('./dog_pic.jpg'); // Path to your image
@@ -98,6 +100,8 @@ export default function App() {
         WhereIsMyDog: 'WhereIsMyDog',
         WorkAJob: 'WorkAJob',
         JobDetails: 'jobs/:id', // Add dynamic job details screen
+        GetAllUserJobs: 'GetAllUserJobs',
+        UserJobList: 'GetAllUserJobs/:user_name',
       },
     },
   };
@@ -121,6 +125,8 @@ export default function App() {
         <Stack.Screen name="RequestATrip" component={RequestATrip} />
         <Stack.Screen name="WorkAJob" component={WorkAJob} />
         <Stack.Screen name="JobDetails" component={JobDetails} />
+        <Stack.Screen name="GetAllUserJobs" component={GetAllUserJobs} />
+        <Stack.Screen name="UserJobList" component={UserJobList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
