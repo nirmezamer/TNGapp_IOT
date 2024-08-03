@@ -75,3 +75,14 @@ GET http://localhost:7071/api/GetAllJobs/Guy_Shpigler
 ###
 
 GET http://localhost:7071/api/GetAllJobs
+
+###
+
+POST http://localhost:7071/api/location
+Content-Type: application/json
+
+{
+    "latitude": 47.6,
+    "longitude": -122.33,
+    "walker_id": "walker123"
+}

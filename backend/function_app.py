@@ -5,14 +5,15 @@ import json
 from azure.data.tables import TableClient
 from module.jobs import jobs
 from module.google import google
+from module.geoLocation import geoLocation
 
 # create a function app
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-    
-# Our other functions (HttpExample, DecreaseCounter, IncreaseCounter, ReadCounter, negotiate) remain the same
+
 # register the services
 app.register_functions(jobs)
 app.register_functions(google)
+app.register_functions(geoLocation)
 
 @app.route(route="HttpExample")
 def HttpExample(req: func.HttpRequest) -> func.HttpResponse:
