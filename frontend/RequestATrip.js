@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigation } from '@react-navigation/native';
 import setHours from 'date-fns/setHours';
 import setMinutes from 'date-fns/setMinutes';
+import format from 'date-fns/format';
 
 const cities = [
   { label: 'Tel Aviv', value: 'Tel Aviv' },
@@ -40,13 +41,13 @@ const RequestATrip = () => {
       HouseNumber: houseNumber,
       AppartmentNumber: apartmentNumber,
       Phone: phone,
-      Date: date.toISOString(),
-      Time: time.toISOString(),
-      Duration: duration.toISOString(),
+      Date: format(date, 'dd-MM-yyyy'), // Format date to YYYY-MM-DD
+      Time: format(time, 'HH:mm'), // Format time to HH:mm
+      Duration: format(duration, 'HH:mm'), // Format duration to HH:mm
     };
-  
+
     console.log('Sending request to server:', requestBody);
-  
+
     fetch('http://localhost:7071/api/InsertJob', {
       method: 'POST',
       headers: {
@@ -69,7 +70,7 @@ const RequestATrip = () => {
         console.error('Error:', error);
         Alert.alert('Error', error.message || 'Failed to submit the request');
       });
-  };  
+  };
 
   // Limit duration to be between 00:00 and 01:00
   const filterTime = (time) => {
