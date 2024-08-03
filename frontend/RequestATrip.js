@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useNavigation } from '@react-navigation/native';
 import setHours from 'date-fns/setHours';
 import setMinutes from 'date-fns/setMinutes';
 
@@ -28,21 +29,47 @@ const RequestATrip = () => {
   const [time, setTime] = useState(setHours(setMinutes(new Date(), 0), 0));
   const [duration, setDuration] = useState(setHours(setMinutes(new Date(), 0), 0));
 
+  const navigation = useNavigation();
+
   const handleSubmit = () => {
-    if (houseNumber > 300 || apartmentNumber > 300) {
-      Alert.alert('Error', 'House Number and Apartment Number must be between 1 and 300');
-      return;
-    }
-
-    const phoneRegex = /^\+972[2-9][0-9]{8}$/;
-    if (!phoneRegex.test(phone)) {
-      Alert.alert('Error', 'Phone number must be in the format +972XXXXXXXXX');
-      return;
-    }
-
-    // Handle form submission logic here
-    Alert.alert('Success', 'Trip Request Submitted');
-  };
+    const requestBody = {
+      Owner: ownerName,
+      Dog: dogName,
+      City: city,
+      Address: address,
+      HouseNumber: houseNumber,
+      AppartmentNumber: apartmentNumber,
+      Phone: phone,
+      Date: date.toISOString(),
+      Time: time.toISOString(),
+      Duration: duration.toISOString(),
+    };
+  
+    console.log('Sending request to server:', requestBody);
+  
+    fetch('http://localhost:7071/api/InsertJob', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        console.log('Response status:', response.status);
+        return response.text().then((text) => {
+          if (response.ok) {
+            console.log('Request submitted successfully:', text);
+            navigation.navigate('DogOwner');
+          } else {
+            throw new Error(text || 'Failed to submit the request');
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Alert.alert('Error', error.message || 'Failed to submit the request');
+      });
+  };  
 
   // Limit duration to be between 00:00 and 01:00
   const filterTime = (time) => {

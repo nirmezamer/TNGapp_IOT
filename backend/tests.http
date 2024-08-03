@@ -86,3 +86,43 @@ Content-Type: application/json
     "longitude": -122.33,
     "walker_id": "walker123"
 }
+
+###
+
+POST http://localhost:7071/api/InsertJob
+Content-Type: application/json
+
+{
+    "PartitionKey": "Guy Shpigler",
+    "RowKey": "1",
+    "Address": "Pichman",
+    "AppartmentNumber": 7,
+    "City": "Tel Aviv",
+    "Date": "1",
+    "Dog": "Sheleg",
+    "Duration": "2024-08-02T21:30:00.000Z",
+    "HouseNumber": 5,
+    "Owner": "Guy Shpigler",
+    "Phone": "+972505467771",
+    "Time": "2024-08-03T06:00:00.000Z"
+}
+
+###
+
+POST http://localhost:7071/api/InsertJob
+Content-Type: application/json
+
+{
+    "PartitionKey": "Nir Mezamer",
+    "RowKey": "1",
+    "Address": "Nachmani",
+    "AppartmentNumber": 7,
+    "City": "Tel Aviv",
+    "Date": "1",
+    "Dog": "Dino",
+    "Duration": "2024-08-02T21:30:00.000Z",
+    "HouseNumber": 17,
+    "Owner": "Nir Mezamer",
+    "Phone": "+972523864475",
+    "Time": "2024-08-03T07:00:00.000Z"
+}
