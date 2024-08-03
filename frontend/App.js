@@ -1,4 +1,3 @@
-// App.js
 import 'react-native-gesture-handler'; // Make sure this is at the top of your file
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
@@ -13,6 +12,7 @@ import SignIn from './SignIn'; // Import SignIn
 import SignUp from './SignUp'; // Import SignUp
 import GoodEntrance from './GoodEntrance'; // Import GoodEntrance
 import WorkAJob from './WorkAJob'; // Import WorkAJob
+import JobDetails from './JobDetails'; // Import JobDetails (new page)
 import "./app.css";
 
 const dogImage = require('./dog_pic.jpg'); // Path to your image
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default function App() {
   const linking = {
     prefixes: [Linking.createURL('/')],
@@ -97,6 +96,7 @@ export default function App() {
         RequestATrip: 'RequestATrip',
         WhereIsMyDog: 'WhereIsMyDog',
         WorkAJob: 'WorkAJob',
+        JobDetails: 'jobs/:id',
       },
     },
   };
@@ -113,6 +113,7 @@ export default function App() {
         <Stack.Screen name="WhereIsMyDog" component={WhereIsMyDog} />
         <Stack.Screen name="RequestATrip" component={RequestATrip} />
         <Stack.Screen name="WorkAJob" component={WorkAJob} />
+        <Stack.Screen name="JobDetails" component={JobDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

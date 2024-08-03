@@ -15,7 +15,7 @@ def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
             req_body["PartitionKey"] = req_body["Owner"]
-            req_body["RowKey"] = f"{req_body['Owner']}_{req_body['Date']}_{req_body['Time']}"
+            req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
             table.upsert_entity(entity=req_body, mode="merge")
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
     except:
@@ -30,7 +30,7 @@ def RemoveJob(req: func.HttpRequest) -> func.HttpResponse:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
             req_body["PartitionKey"] = req_body["Owner"]
-            req_body["RowKey"] = f"{req_body['Owner']}_{req_body['Date']}_{req_body['Time']}"
+            req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
             table.delete_entity(partition_key=req_body["PartitionKey"], row_key=req_body["RowKey"])
             return func.HttpResponse(f"Job deleted successfully:\n {req_body}", status_code=200)
     except:
@@ -71,3 +71,28 @@ def GetAllJobsOfOwner(req: func.HttpRequest) -> func.HttpResponse:
     except Exception as e:
         logging.info(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
+
+@jobs.route(route="GetJob/{id}", auth_level=func.AuthLevel.ANONYMOUS, methods=["GET"])    
+def GetJobById(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('GetJobById function processed a request.')
+    
+    _id = req.route_params['id']
+    _owner = _id.split(";")[0]
+    _owner = _owner.replace('_', ' ')
+    
+    logging.info(f"Owner: {_owner}, ID: {_id}")
+    
+    connection_string = os.getenv("AzureWebJobsStorage")
+    
+    try:
+        with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
+            logging.info(f"start query for PartitionKey: {_owner}, RowKey: {_id}")
+            entity = table.get_entity(partition_key=_owner, row_key=_id)
+            logging.info(f"end query for PartitionKey: {_owner}, RowKey: {_id}")
+            entity = {key: str(value) for key, value in entity.items()}
+            logging.info(f"Entity: {entity}")
+            return func.HttpResponse(json.dumps(entity), status_code=200)
+    except Exception as e:
+        logging.info(f"Error: {e}")
+        return func.HttpResponse("Error", status_code=500)
+    
