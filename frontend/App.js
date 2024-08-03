@@ -106,8 +106,9 @@ export default function App() {
     <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={({ navigation }) => ({
-          headerRight: () => <HomeButton navigation={navigation} />,
+        screenOptions={({ route }) => ({
+          headerRight: () =>
+            route.name !== 'Home' && route.name !== 'SignIn' ? <HomeButton /> : null,
         })}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
