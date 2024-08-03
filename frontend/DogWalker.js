@@ -14,12 +14,33 @@ export default function DogWalker({ navigation }) {
 
   const renderJob = ({ item }) => (
     <View style={styles.jobContainer}>
-      <Text style={styles.jobTitle}>{item.Owner}</Text>
-      <Text style={styles.jobCompany}>{item.DogName}</Text>
-      <Text style={styles.jobCompany}>{item.startDate}</Text>
-      <Text style={styles.jobCompany}>{item.startTime}</Text>
-      <Text style={styles.jobCompany}>{item.endDate}</Text>
-      <Text style={styles.jobCompany}>{item.endTime}</Text>
+      <Text style={styles.jobTitle}>{item.City}</Text>
+      <Text style={styles.jobCompany}>{item.Address} {item.HouseNumber}, {item.AppartmentNumber}</Text>
+  
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Owner:</Text>
+        <Text style={styles.jobInfoValue}>{item.Owner}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Dog Name:</Text>
+        <Text style={styles.jobInfoValue}>{item.Dog}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Phone Number:</Text>
+        <Text style={styles.jobInfoValue}>{item.Phone}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Date:</Text>
+        <Text style={styles.jobInfoValue}>{item.Date}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Time:</Text>
+        <Text style={styles.jobInfoValue}>{item.Time}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Duration:</Text>
+        <Text style={styles.jobInfoValue}>{item.Duration}</Text>
+      </View>
     </View>
   );
 
@@ -56,15 +77,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   list: {
-    alignItems: 'center',
+    width: '100%',
   },
   jobContainer: {
     backgroundColor: '#f9f9f9',
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
-    width: '100%',
-    maxWidth: 400,
+    width: '23%',
+    alignSelf: 'center', // Center the job container
   },
   jobTitle: {
     fontSize: 18,
@@ -73,5 +94,21 @@ const styles = StyleSheet.create({
   jobCompany: {
     fontSize: 16,
     color: '#555',
+  },
+  jobInfoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 5,
+  },
+  jobInfoLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#555',
+    flexBasis: '40%',
+  },
+  jobInfoValue: {
+    fontSize: 16,
+    color: '#555',
+    flexBasis: '60%',
   },
 });

@@ -15,7 +15,7 @@ def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
             req_body["PartitionKey"] = req_body["Owner"]
-            req_body["RowKey"] = f"{req_body['Date']}_{req_body['Time']}"
+            req_body["RowKey"] = f"{req_body['Owner']}_{req_body['Date']}_{req_body['Time']}"
             table.upsert_entity(entity=req_body, mode="merge")
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
     except:
@@ -30,7 +30,7 @@ def RemoveJob(req: func.HttpRequest) -> func.HttpResponse:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
             req_body["PartitionKey"] = req_body["Owner"]
-            req_body["RowKey"] = f"{req_body['Date']}_{req_body['Time']}"
+            req_body["RowKey"] = f"{req_body['Owner']}_{req_body['Date']}_{req_body['Time']}"
             table.delete_entity(partition_key=req_body["PartitionKey"], row_key=req_body["RowKey"])
             return func.HttpResponse(f"Job deleted successfully:\n {req_body}", status_code=200)
     except:
@@ -46,8 +46,6 @@ def GetAllJobs(req: func.HttpRequest) -> func.HttpResponse:
             entities = table.list_entities()
             response = []
             for entity in entities:
-                entity.pop("PartitionKey")
-                entity.pop("RowKey")
                 response.append(entity)
             return func.HttpResponse(json.dumps(response), status_code=200)
     except:
@@ -68,8 +66,6 @@ def GetAllJobsOfOwner(req: func.HttpRequest) -> func.HttpResponse:
             logging.info(f"end query for Owner: {_owner}")
             response = []
             for entity in entities:
-                entity.pop("PartitionKey")
-                entity.pop("RowKey")
                 response.append(entity)
             return func.HttpResponse(json.dumps(response), status_code=200)
     except Exception as e:
