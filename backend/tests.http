@@ -108,11 +108,15 @@ Content-Type: application/json
     "Address": "Nachmani",
     "AppartmentNumber": 7,
     "City": "Tel Aviv",
-    "Date": "1",
+    "Date": "11-08-2024",
     "Dog": "Dino",
-    "Duration": "2024-08-02T21:30:00.000Z",
+    "Duration": "00:30",
     "HouseNumber": 17,
     "Owner": "Nir Mezamer",
     "Phone": "+972523864475",
-    "Time": "2024-08-03T07:00:00.000Z"
+    "Time": "09:30"
 }
+
+###
+
+GET http://localhost:7071/api/GetJob/Nir_Mezamer;11-08-2024;09:30

@@ -16,6 +16,7 @@ export default function DogWalker({ navigation }) {
     <View style={styles.jobContainer}>
       <Text style={styles.jobTitle}>{item.City}</Text>
       <Text style={styles.jobCompany}>{item.Address} {item.HouseNumber}, {item.AppartmentNumber}</Text>
+      <Text style={styles.jobCompany}> </Text>
   
       <View style={styles.jobInfoContainer}>
         <Text style={styles.jobInfoLabel}>Owner:</Text>
