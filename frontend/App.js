@@ -13,6 +13,7 @@ import SignUp from './SignUp'; // Import SignUp
 import GoodEntrance from './GoodEntrance'; // Import GoodEntrance
 import WorkAJob from './WorkAJob'; // Import WorkAJob
 import JobDetails from './JobDetails'; // Import JobDetails (new page)
+import HomeButton from './HomeButton'; // Import HomeButton
 import "./app.css";
 
 const dogImage = require('./dog_pic.jpg'); // Path to your image
@@ -96,14 +97,19 @@ export default function App() {
         RequestATrip: 'RequestATrip',
         WhereIsMyDog: 'WhereIsMyDog',
         WorkAJob: 'WorkAJob',
-        JobDetails: 'jobs/:id',
+        JobDetails: 'jobs/:id', // Add dynamic job details screen
       },
     },
   };
 
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={({ navigation }) => ({
+          headerRight: () => <HomeButton navigation={navigation} />,
+        })}
+      >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
