@@ -1,6 +1,6 @@
 // DogWalker.js
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 
 export default function DogWalker({ navigation }) {
   const [jobs, setJobs] = useState([]);
@@ -13,7 +13,10 @@ export default function DogWalker({ navigation }) {
   }, []);
 
   const renderJob = ({ item }) => (
-    <View style={styles.jobContainer}>
+    <TouchableOpacity
+      style={styles.jobContainer}
+      onPress={() => navigation.navigate('JobDetails', { id: item.RowKey })}
+    >
       <Text style={styles.jobTitle}>{item.City}</Text>
       <Text style={styles.jobCompany}>{item.Address} {item.HouseNumber}, {item.AppartmentNumber}</Text>
       <Text style={styles.jobCompany}> </Text>
@@ -42,7 +45,7 @@ export default function DogWalker({ navigation }) {
         <Text style={styles.jobInfoLabel}>Duration:</Text>
         <Text style={styles.jobInfoValue}>{item.Duration}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -80,13 +83,17 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
   },
+  row: {
+    justifyContent: 'space-between',
+  },
   jobContainer: {
     backgroundColor: '#f9f9f9',
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
-    width: '23%',
-    alignSelf: 'center', // Center the job container
+    flex: 1,
+    maxWidth: '23%', // Adjusting for 4 columns with some margin
+    alignSelf: 'center',
   },
   jobTitle: {
     fontSize: 18,
