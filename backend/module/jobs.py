@@ -16,6 +16,7 @@ def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
             req_body = req.get_json()
             req_body["PartitionKey"] = req_body["Owner"]
             req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
+            req_body["Status"] = "Available"
             table.upsert_entity(entity=req_body, mode="merge")
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
     except:

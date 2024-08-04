@@ -33,6 +33,7 @@ export default function JobDetails({ route }) {
       <Text style={styles.detail}>Date: {job.Date}</Text>
       <Text style={styles.detail}>Time: {job.Time}</Text>
       <Text style={styles.detail}>Duration: {job.Duration}</Text>
+      <Text style={styles.detail}>Status: {job.Status}</Text> 
 
       <MapComponent />
     </View>

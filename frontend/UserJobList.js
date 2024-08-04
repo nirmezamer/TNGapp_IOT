@@ -46,6 +46,10 @@ export default function UserJobList({ route }) {
         <Text style={styles.jobInfoLabel}>Duration:</Text>
         <Text style={styles.jobInfoValue}>{item.Duration}</Text>
       </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Status:</Text> 
+        <Text style={styles.jobInfoValue}>{item.Status}</Text> 
+      </View>
     </TouchableOpacity>
   );
 
