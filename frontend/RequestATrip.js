@@ -21,6 +21,7 @@ const cities = [
 const RequestATrip = () => {
   const [ownerName, setOwnerName] = useState('');
   const [dogName, setDogName] = useState('');
+  const [password, setPassword] = useState('');
   const [city, setCity] = useState('Tel Aviv');
   const [address, setAddress] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
@@ -36,6 +37,7 @@ const RequestATrip = () => {
     const requestBody = {
       Owner: ownerName,
       Dog: dogName,
+      Password: password,
       City: city,
       Address: address,
       HouseNumber: houseNumber,
@@ -93,6 +95,13 @@ const RequestATrip = () => {
         style={styles.input}
         value={dogName}
         onChangeText={setDogName}
+      />
+
+      <Text style={styles.label}>Job Password:</Text>
+      <TextInput
+        style={styles.input}
+        value={password}
+        onChangeText={setPassword}
       />
 
       <Text style={styles.label}>City:</Text>
