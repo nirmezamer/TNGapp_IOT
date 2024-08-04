@@ -97,3 +97,21 @@ def GetJobById(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
     
+@jobs.route(route="UpdateAllJobs", auth_level=func.AuthLevel.ANONYMOUS, methods=["GET"])    
+def UpdateAllJobs(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('UpdateAllJobs function processed a request.')
+    
+    connection_string = os.getenv("AzureWebJobsStorage")
+    
+    try:
+        with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
+            entities = table.list_entities()
+            logging.info(f"Start updating all jobs")
+            for entity in entities:
+                entity["Password"] = "0000"
+                table.upsert_entity(entity=entity, mode="replace")
+            logging.info(f"End updating all jobs")
+            return func.HttpResponse("All jobs updated successfully", status_code=200)
+    except Exception as e:
+        logging.info(f"Error: {e}")
+        return func.HttpResponse("Error", status_code=500)

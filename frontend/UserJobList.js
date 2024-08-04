@@ -1,17 +1,19 @@
 // UserJobList.js
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function UserJobList({ route }) {
   const { user_name } = route.params;
   const [jobs, setJobs] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetch(`http://localhost:7071/api/GetAllJobs/${user_name}`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error('Error fetching jobs:', error));
-  }, []);
+  }, [user_name]);
 
   const renderJob = ({ item }) => (
     <TouchableOpacity
@@ -29,6 +31,10 @@ export default function UserJobList({ route }) {
       <View style={styles.jobInfoContainer}>
         <Text style={styles.jobInfoLabel}>Dog Name:</Text>
         <Text style={styles.jobInfoValue}>{item.Dog}</Text>
+      </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Password:</Text>
+        <Text style={styles.jobInfoValue}>{item.Password}</Text>
       </View>
       <View style={styles.jobInfoContainer}>
         <Text style={styles.jobInfoLabel}>Phone Number:</Text>
