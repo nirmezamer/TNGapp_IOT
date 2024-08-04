@@ -7,7 +7,8 @@ from azure.data.tables import TableClient
 jobs = func.Blueprint()
 
 @jobs.route(route="InsertJob", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])
-def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
+@jobs.generic_output_binding(arg_name="signalRHub", type="signalR", hubName="mySignalRHub", connectionStringSetting="AzureSignalRConnectionString")
+def InsertJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     
     connection_string = os.getenv("AzureWebJobsStorage")
@@ -19,8 +20,13 @@ def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
             req_body["Status"] = "Available"
             req_body["Walker"] = "None"
             table.upsert_entity(entity=req_body, mode="merge")
+            signalRHub.set(json.dumps({
+                'target': 'newJob',
+                'arguments': [req_body]
+            }))
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
-    except:
+    except Exception as e:
+        logging.info(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
     
 @jobs.route(route="RemoveJob", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])

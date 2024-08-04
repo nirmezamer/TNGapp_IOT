@@ -18,7 +18,7 @@ load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
-REDIRECT_URI = "http://localhost:7071/api/auth/google/callback"  # Use the local redirect URI
+REDIRECT_URI = "https://tngapp1.azurewebsites.net/api/auth/google/callback"  # for local development: http://localhost:7071/api/auth/google/callback
 
 
 def get_google_provider_cfg():

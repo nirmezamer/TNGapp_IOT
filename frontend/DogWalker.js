@@ -1,15 +1,55 @@
 // DogWalker.js
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import * as SignalR from '@microsoft/signalr';
 
 export default function DogWalker({ navigation }) {
   const [jobs, setJobs] = useState([]);
+  const [connection, setConnection] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:7071/api/GetAllJobs') 
-      .then((response) => response.json())
-      .then((data) => setJobs(data))
-      .catch((error) => console.error('Error fetching jobs:', error));
+    const fetchJobs = () => {
+      fetch('http://localhost:7071/api/GetAllJobs')
+        .then((response) => response.json())
+        .then((data) => setJobs(data))
+        .catch((error) => console.error('Error fetching jobs:', error));
+    };
+
+    fetchJobs();
+
+    const signalrConnection = new SignalR.HubConnectionBuilder()
+    .withUrl('http://localhost:7071/api', {
+      withCredentials: false, // We disable the credential for simplicity.
+      // TODO: check what happens when you disable this flag!
+    })// Note we don't call the Negotiate directly, it will be called by the Client SDK
+    .withAutomaticReconnect()
+    .configureLogging(SignalR.LogLevel.Information)
+    .build();
+
+    signalrConnection.on('newJob', (message) => {
+      fetchJobs();
+    });
+
+
+    signalrConnection.onclose(() => {
+      console.log('Connection closed.');
+    });
+    
+    setConnection(signalrConnection); 
+
+    // Start the connection
+    const startConnection = async () => {
+        try {
+            await signalrConnection.start();
+            console.log('SignalR connected.');
+            setConnection(signalrConnection);
+        } catch (err) {
+            console.log('SignalR connection error:', err);
+            setTimeout(startConnection, 5000); // Retry connection after 5 seconds
+        }
+    };
+
+    startConnection();
   }, []);
 
   const renderJob = ({ item }) => (
@@ -20,7 +60,7 @@ export default function DogWalker({ navigation }) {
       <Text style={styles.jobTitle}>{item.City}</Text>
       <Text style={styles.jobCompany}>{item.Address} {item.HouseNumber}, {item.AppartmentNumber}</Text>
       <Text style={styles.jobCompany}> </Text>
-  
+
       <View style={styles.jobInfoContainer}>
         <Text style={styles.jobInfoLabel}>Owner:</Text>
         <Text style={styles.jobInfoValue}>{item.Owner}</Text>
