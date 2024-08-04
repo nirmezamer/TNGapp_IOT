@@ -5,3 +5,11 @@ GET http://localhost:7071/api/UpdateAllJobs
 ###
 
 GET http://localhost:7071/api/GetAllJobs
+
+###
+
+GET https://tngapp1.azurewebsites.net/api/GetAllJobs
+
+###
+
+GET https://tngapp1.azurewebsites.net/api/UpdateAllJobs

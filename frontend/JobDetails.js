@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Modal, TouchableOpacity } from 'react-native';
 import MapComponent from './MapComponent'; // Import the MapComponent
+import config from './config';
 
-export default function JobDetails({ route }) {
+export default function JobDetails({ route , navigation}) {
   const { id } = route.params; // Get the job ID from the route parameters
   const [job, setJob] = useState(null);
   const [takeJobModalVisible, setTakeJobModalVisible] = useState(false);
@@ -12,7 +13,7 @@ export default function JobDetails({ route }) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const fetchJobDetails = () => {
-    fetch(`http://localhost:7071/api/GetJob/${id}`)
+    fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
       .then((response) => response.json())
       .then((data) => setJob(data))
       .catch((error) => console.error('Error fetching job details:', error));
@@ -28,7 +29,7 @@ export default function JobDetails({ route }) {
   };
 
   const handleConfirmTakeJob = () => {
-    fetch(`http://localhost:7071/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ export default function JobDetails({ route }) {
   };
 
   const handleReleaseJob = () => {
-    fetch(`http://localhost:7071/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ export default function JobDetails({ route }) {
 
   const handleConfirmStartJob = () => {
     if (password === job.Password) {
-      fetch(`http://localhost:7071/api/UpdateJob`, {
+      fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ export default function JobDetails({ route }) {
   };
 
   const handleEndJob = () => {
-    fetch(`http://localhost:7071/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

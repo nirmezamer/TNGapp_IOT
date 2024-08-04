@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import config from './config';
 
 export default function UserJobList({ route }) {
   const { user_name } = route.params;
@@ -9,7 +10,7 @@ export default function UserJobList({ route }) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch(`http://localhost:7071/api/GetAllJobs/${user_name}`)
+    fetch(`${config.getBaseUrl()}/api/GetAllJobs/${user_name}`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error('Error fetching jobs:', error));

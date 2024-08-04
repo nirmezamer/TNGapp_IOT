@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import setHours from 'date-fns/setHours';
 import setMinutes from 'date-fns/setMinutes';
 import format from 'date-fns/format';
+import config from './config';
 
 const cities = [
   { label: 'Tel Aviv', value: 'Tel Aviv' },
@@ -50,7 +51,7 @@ const RequestATrip = () => {
 
     console.log('Sending request to server:', requestBody);
 
-    fetch('http://localhost:7071/api/InsertJob', {
+    fetch(`${config.getBaseUrl()}/api/InsertJob`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

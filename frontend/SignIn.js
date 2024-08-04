@@ -1,11 +1,12 @@
 // SignIn.js
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import config from './config';
 
 export default function SignIn() {
   const handleGoogleSignIn = () => {
     // Navigate to the backend endpoint for Google OAuth
-    window.location.href = 'http://localhost:7071/api/auth/google'; // Update to match your Azure Function URL
+    window.location.href = `${config.getBaseUrl()}/api/auth/google`; // Update to match your Azure Function URL
   };
 
   return (

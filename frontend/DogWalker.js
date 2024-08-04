@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import * as SignalR from '@microsoft/signalr';
+import config from './config';
 
 export default function DogWalker({ navigation }) {
   const [jobs, setJobs] = useState([]);
@@ -9,7 +10,7 @@ export default function DogWalker({ navigation }) {
 
   useEffect(() => {
     const fetchJobs = () => {
-      fetch('http://localhost:7071/api/GetAllJobs')
+      fetch(`${config.getBaseUrl()}/api/GetAllJobs`)
         .then((response) => response.json())
         .then((data) => setJobs(data))
         .catch((error) => console.error('Error fetching jobs:', error));
@@ -18,7 +19,7 @@ export default function DogWalker({ navigation }) {
     fetchJobs();
 
     const signalrConnection = new SignalR.HubConnectionBuilder()
-    .withUrl('http://localhost:7071/api', {
+    .withUrl(`${config.getBaseUrl()}/api`, {
       withCredentials: false, // We disable the credential for simplicity.
       // TODO: check what happens when you disable this flag!
     })// Note we don't call the Negotiate directly, it will be called by the Client SDK

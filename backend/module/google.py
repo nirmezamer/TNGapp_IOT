@@ -13,13 +13,15 @@ google = func.Blueprint()
 # Allow insecure transport for local development
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+# Allow insecure transport for Production 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
+
 # Load environment variables
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
-REDIRECT_URI = "https://tngapp1.azurewebsites.net/api/auth/google/callback"  # for local development: http://localhost:7071/api/auth/google/callback
-
+REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI')
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
