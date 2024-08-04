@@ -1,6 +1,7 @@
 // JobDetails.js
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import MapComponent from './MapComponent'; // Import the MapComponent
 
 export default function JobDetails({ route }) {
   const { id } = route.params; // Get the job ID from the route parameters
@@ -32,6 +33,9 @@ export default function JobDetails({ route }) {
       <Text style={styles.detail}>Date: {job.Date}</Text>
       <Text style={styles.detail}>Time: {job.Time}</Text>
       <Text style={styles.detail}>Duration: {job.Duration}</Text>
+      <Text style={styles.detail}>Status: {job.Status}</Text> 
+
+      <MapComponent />
     </View>
   );
 }

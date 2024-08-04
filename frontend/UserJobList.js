@@ -1,12 +1,13 @@
-// DogWalker.js
+// UserJobList.js
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 
-export default function DogWalker({ navigation }) {
+export default function UserJobList({ route }) {
+  const { user_name } = route.params;
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:7071/api/GetAllJobs') 
+    fetch(`http://localhost:7071/api/GetAllJobs/${user_name}`)
       .then((response) => response.json())
       .then((data) => setJobs(data))
       .catch((error) => console.error('Error fetching jobs:', error));
@@ -54,8 +55,8 @@ export default function DogWalker({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Dog Walker!</Text>
-      <Text style={styles.nontitle}>Please select a job you would like to do</Text>
+      <Text style={styles.title}>Welcome {user_name}!</Text>
+      <Text style={styles.nontitle}>Here are all your jobs:</Text>
       <FlatList
         data={jobs}
         renderItem={renderJob}
