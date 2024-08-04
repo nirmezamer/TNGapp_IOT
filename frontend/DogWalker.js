@@ -49,6 +49,10 @@ export default function DogWalker({ navigation }) {
         <Text style={styles.jobInfoLabel}>Status:</Text> 
         <Text style={styles.jobInfoValue}>{item.Status}</Text> 
       </View>
+      <View style={styles.jobInfoContainer}>
+        <Text style={styles.jobInfoLabel}>Walker:</Text> 
+        <Text style={styles.jobInfoValue}>{item.Walker}</Text> 
+      </View>
     </TouchableOpacity>
   );
 

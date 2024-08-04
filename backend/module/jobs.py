@@ -17,6 +17,7 @@ def InsertJob(req: func.HttpRequest) -> func.HttpResponse:
             req_body["PartitionKey"] = req_body["Owner"]
             req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
             req_body["Status"] = "Available"
+            req_body["Walker"] = "None"
             table.upsert_entity(entity=req_body, mode="merge")
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
     except:
@@ -108,10 +109,32 @@ def UpdateAllJobs(req: func.HttpRequest) -> func.HttpResponse:
             entities = table.list_entities()
             logging.info(f"Start updating all jobs")
             for entity in entities:
-                entity["Password"] = "0000"
+                entity["Status"] = "Available"
+                entity["Walker"] = "None"
                 table.upsert_entity(entity=entity, mode="replace")
             logging.info(f"End updating all jobs")
             return func.HttpResponse("All jobs updated successfully", status_code=200)
     except Exception as e:
         logging.info(f"Error: {e}")
+        return func.HttpResponse("Error", status_code=500)
+    
+@jobs.route(route="UpdateJob", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])
+def UpdateJob(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('UpdateJob function processed a request.')
+
+    connection_string = os.getenv("AzureWebJobsStorage")
+    try:
+        with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
+            req_body = req.get_json()
+            partition_key = req_body.pop("PartitionKey")
+            row_key = req_body.pop("RowKey")
+
+            entity = table.get_entity(partition_key=partition_key, row_key=row_key)
+            for key, value in req_body.items():
+                entity[key] = value
+            table.update_entity(entity=entity, mode="merge")
+
+            return func.HttpResponse(f"Job updated successfully:\n {entity}", status_code=200)
+    except Exception as e:
+        logging.error(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
