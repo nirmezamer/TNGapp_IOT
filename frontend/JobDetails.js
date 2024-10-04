@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Modal, TouchableOpacity } from 'react-native';
+import * as SignalR from '@microsoft/signalr';
 import MapComponent from './MapComponent'; // Import the MapComponent
 import config from './config';
 
@@ -11,32 +12,67 @@ export default function JobDetails({ route , navigation}) {
   const [walkerName, setWalkerName] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [connection, setConnection] = useState(null);
 
-  const fetchJobDetails = () => {
-    fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
-      .then((response) => response.json())
-      .then((data) => setJob(data))
-      .catch((error) => console.error('Error fetching job details:', error));
-  };
+    const fetchJobDetails = () => {
+      fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
+        .then((response) => response.json())
+        .then((data) => setJob(data))
+        .catch((error) => console.error('Error fetching job details:', error));
+    };
 
   useEffect(() => {
     // Fetch the job details using the ID
     fetchJobDetails();
   }, [id]);
 
+  useEffect(() => {
+    const signalrConnection = new SignalR.HubConnectionBuilder()
+    .withUrl(`${config.getBaseUrl()}/api`, {
+      withCredentials: false, // We disable the credential for simplicity.
+      // TODO: check what happens when you disable this flag!
+    })// Note we don't call the Negotiate directly, it will be called by the Client SDK
+    .withAutomaticReconnect()
+    .configureLogging(SignalR.LogLevel.Information)
+    .build();
+
+    signalrConnection.on('jobUpdated', (message) => {
+      fetchJobDetails();
+    });
+
+    signalrConnection.onclose(() => {
+      console.log('Connection closed.');
+    });
+    
+    setConnection(signalrConnection); 
+
+    // Start the connection
+    const startConnection = async () => {
+        try {
+            await signalrConnection.start();
+            console.log('SignalR connected.');
+            setConnection(signalrConnection);
+        } catch (err) {
+            console.log('SignalR connection error:', err);
+            setTimeout(startConnection, 5000); // Retry connection after 5 seconds
+        }
+    };
+
+    startConnection();
+  }, []);
+
   const handleTakeJob = () => {
     setTakeJobModalVisible(true);
   };
 
   const handleConfirmTakeJob = () => {
-    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         PartitionKey: job.Owner,
-        RowKey: id,
         Status: 'pending',
         Walker: walkerName
       }),
@@ -52,14 +88,13 @@ export default function JobDetails({ route , navigation}) {
   };
 
   const handleReleaseJob = () => {
-    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         PartitionKey: job.Owner,
-        RowKey: id,
         Status: 'Available',
         Walker: 'None'
       }),
@@ -78,14 +113,13 @@ export default function JobDetails({ route , navigation}) {
 
   const handleConfirmStartJob = () => {
     if (password === job.Password) {
-      fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
+      fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           PartitionKey: job.Owner,
-          RowKey: id,
           Status: 'active'
         }),
       })
@@ -106,14 +140,13 @@ export default function JobDetails({ route , navigation}) {
   };
 
   const handleEndJob = () => {
-    fetch(`${config.getBaseUrl()}/api/UpdateJob`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         PartitionKey: job.Owner,
-        RowKey: id,
         Status: 'Terminate',
         Walker: 'None'
       }),

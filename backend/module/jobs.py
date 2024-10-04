@@ -124,8 +124,9 @@ def UpdateAllJobs(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
     
-@jobs.route(route="UpdateJob", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])
-def UpdateJob(req: func.HttpRequest) -> func.HttpResponse:
+@jobs.route(route="UpdateJob/{id}", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])
+@jobs.generic_output_binding(arg_name="signalRHub", type="signalR", hubName="mySignalRHub", connectionStringSetting="AzureSignalRConnectionString")
+def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResponse:
     logging.info('UpdateJob function processed a request.')
 
     connection_string = os.getenv("AzureWebJobsStorage")
@@ -133,12 +134,21 @@ def UpdateJob(req: func.HttpRequest) -> func.HttpResponse:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
             partition_key = req_body.pop("PartitionKey")
-            row_key = req_body.pop("RowKey")
+            row_key = req.route_params['id']
 
+            # Fetch the entity from the table
             entity = table.get_entity(partition_key=partition_key, row_key=row_key)
             for key, value in req_body.items():
                 entity[key] = value
+            
+            # Update the entity
             table.update_entity(entity=entity, mode="merge")
+
+            # Trigger SignalR notification to clients
+            signalRHub.set(json.dumps({
+                'target': 'jobUpdated',
+                'arguments': [entity]
+            }))
 
             return func.HttpResponse(f"Job updated successfully:\n {entity}", status_code=200)
     except Exception as e:
