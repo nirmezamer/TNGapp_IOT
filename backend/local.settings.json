@@ -4,7 +4,7 @@
       "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=guytable;AccountKey=LyBjTT/1PED2wt4aNLli1C80nTipjNOpX1GIbgDXjrl86+ZIi/O0gf51tUPCe8BEw98IzC5eE88i+ASthjnaTA==;EndpointSuffix=core.windows.net",
       "FUNCTIONS_WORKER_RUNTIME": "python",
       "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
-      "AzureSignalRConnectionString": "Endpoint=https://tngsig.service.signalr.net;AccessKey=tBXL41zULk3TPcadGRdG3wMYgjkwO9SQy9+oY9UJDOk=;Version=1.0;",
+      "AzureSignalRConnectionString": "Endpoint=https://tngsigfree.service.signalr.net;AccessKey=Bms4xV2SYGg4Vf9aJ8zVeofrY1LvxEPV2dPjROHZPN8oPbrNfoGnJQQJ99AJACYeBjFXJ3w3AAAAASRS7Pax;Version=1.0;",
       "GOOGLE_CLIENT_ID": "1065837839936-b3et77d53qjued90epvu05ama0acvj0p.apps.googleusercontent.com",
       "GOOGLE_CLIENT_SECRET": "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",
       "GOOGLE_REDIRECT_URI": "http://localhost:7071/api/auth/google/callback"
