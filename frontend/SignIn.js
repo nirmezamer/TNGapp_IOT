@@ -20,10 +20,9 @@ export default function SignIn() {
       <Text style={styles.title}>Sign In with Google</Text>
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
         <Image
-          source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png' }}
+          source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png' }}
           style={styles.googleLogo}
         />
-        <Text style={styles.googleButtonText}>Sign in with Google</Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingVertical: 15,
-    width: '100%',
+    paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
@@ -63,12 +62,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   googleLogo: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  googleButtonText: {
-    color: '#333',
-    fontSize: 16,
+    width: 40,  
+    height: 40, 
+    resizeMode: 'contain',
   },
 });

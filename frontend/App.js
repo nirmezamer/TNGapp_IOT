@@ -28,12 +28,8 @@ function HomeScreen({ navigation }) {
       <Text style={styles.welcomeText}>Welcome to the Dog Walking App</Text>
       <Image source={dogImage} style={styles.dogImage} />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.googleButton} onPress={() => navigation.navigate('SignIn')}>
-          <Image
-            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png' }}
-            style={styles.googleLogo}
-          />
-          <Text style={styles.googleButtonText}>Sign in with Google</Text>
+        <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.signInButtonText}>Sign in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,25 +59,21 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
   },
-  googleButton: {
-    flexDirection: 'row',
+  signInButton: {
     backgroundColor: '#fff',
     paddingVertical: 15,
     paddingHorizontal: 30,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center', // Ensure content is centered horizontally
     borderRadius: 5,
     borderColor: '#ccc',
     borderWidth: 1,
+    width: 150, // You can adjust this width to your needs
   },
-  googleLogo: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  googleButtonText: {
+  signInButtonText: {
     color: '#333',
     fontSize: 16,
+    textAlign: 'center', // Center the text inside the button
   },
 });
 
