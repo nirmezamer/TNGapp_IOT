@@ -19,11 +19,20 @@ def InsertJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
             req_body["Status"] = "Available"
             req_body["Walker"] = "None"
+
+            # Add default location for Tel Aviv if not provided
+            if "Latitude" not in req_body or "Longitude" not in req_body:
+                req_body["Latitude"] = 32.0853
+                req_body["Longitude"] = 34.7818
+
             table.upsert_entity(entity=req_body, mode="merge")
+
+            # Notify clients via SignalR about the new job
             signalRHub.set(json.dumps({
                 'target': 'newJob',
                 'arguments': [req_body]
             }))
+            
             return func.HttpResponse(f"Job inserted successfully:\n {req_body}", status_code=200)
     except Exception as e:
         logging.info(f"Error: {e}")
@@ -99,7 +108,10 @@ def GetJobById(req: func.HttpRequest) -> func.HttpResponse:
             logging.info(f"end query for PartitionKey: {_owner}, RowKey: {_id}")
             entity = {key: str(value) for key, value in entity.items()}
             logging.info(f"Entity: {entity}")
-            return func.HttpResponse(json.dumps(entity), status_code=200)
+            response = func.HttpResponse(json.dumps(entity), status_code=200)
+            response.headers['Set-Cookie'] = "SameSite=None"
+            return response
+
     except Exception as e:
         logging.info(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)

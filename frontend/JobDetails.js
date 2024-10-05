@@ -206,7 +206,7 @@ export default function JobDetails({ route , navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-      <MapComponent />
+      <MapComponent latitude={parseFloat(job.Latitude)} longitude={parseFloat(job.Longitude)} />
 
       <Modal
         animationType="slide"

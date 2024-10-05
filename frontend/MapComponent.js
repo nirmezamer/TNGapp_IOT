@@ -1,9 +1,15 @@
-// MapComponent.js
 import React, { useEffect } from 'react';
 
-const MapComponent = () => {
+const MapComponent = ({ latitude, longitude }) => {
   useEffect(() => {
     const loadAzureMaps = () => {
+      // Add Mapbox CSS
+      const link = document.createElement('link');
+      link.href = 'https://atlas.microsoft.com/sdk/js/atlas.min.css?api-version=2.0';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+
+      // Load the Azure Maps JavaScript
       const script = document.createElement('script');
       script.src = 'https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=2.0';
       script.onload = () => initializeMap();
@@ -14,7 +20,7 @@ const MapComponent = () => {
       const subscriptionKey = "8Jux9Ej5haMKG3J3vAcirUxKfDsXzxC4NVdjc9MZqnbFZ4Tqi31fJQQJ99AHACYeBjFPSPD9AAAgAZMP6avG";
 
       const map = new atlas.Map('myMap', {
-        center: [34.7818, 32.0853], // Centered on Tel Aviv
+        center: [longitude || 34.7818, latitude || 32.0853], // Use provided coordinates or default to Tel Aviv
         zoom: 12,
         view: 'Auto',
         authOptions: {
@@ -24,7 +30,14 @@ const MapComponent = () => {
       });
 
       map.events.add('ready', () => {
-        // Add any map customizations here if needed
+        // Add a point marker at the specified location
+        const marker = new atlas.HtmlMarker({
+          htmlContent: '<div style="background-color:red; width:10px; height:10px; border-radius:50%;"></div>',
+          position: [longitude || 34.7818, latitude || 32.0853], // Marker coordinates
+        });
+
+        // Add the marker to the map
+        map.markers.add(marker);
       });
     };
 
@@ -33,9 +46,9 @@ const MapComponent = () => {
     } else {
       initializeMap();
     }
-  }, []);
+  }, [latitude, longitude]);
 
   return <div id="myMap" style={{ width: '100%', height: '300px' }}></div>;
 };
 
-export default MapComponent
+export default MapComponent;
