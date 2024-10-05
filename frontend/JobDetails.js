@@ -13,13 +13,15 @@ export default function JobDetails({ route , navigation}) {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [connection, setConnection] = useState(null);
+  const [clientLocation, setClientLocation] = useState(null); // Add state for client location
+  const [watchId, setWatchId] = useState(null); // Store the geolocation watch ID
 
-    const fetchJobDetails = () => {
-      fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
-        .then((response) => response.json())
-        .then((data) => setJob(data))
-        .catch((error) => console.error('Error fetching job details:', error));
-    };
+  const fetchJobDetails = () => {
+    fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
+      .then((response) => response.json())
+      .then((data) => setJob(data))
+      .catch((error) => console.error('Error fetching job details:', error));
+  };
 
   useEffect(() => {
     // Fetch the job details using the ID
@@ -28,13 +30,12 @@ export default function JobDetails({ route , navigation}) {
 
   useEffect(() => {
     const signalrConnection = new SignalR.HubConnectionBuilder()
-    .withUrl(`${config.getBaseUrl()}/api`, {
-      withCredentials: false, // We disable the credential for simplicity.
-      // TODO: check what happens when you disable this flag!
-    })// Note we don't call the Negotiate directly, it will be called by the Client SDK
-    .withAutomaticReconnect()
-    .configureLogging(SignalR.LogLevel.Information)
-    .build();
+      .withUrl(`${config.getBaseUrl()}/api`, {
+        withCredentials: false, // We disable the credential for simplicity.
+      })
+      .withAutomaticReconnect()
+      .configureLogging(SignalR.LogLevel.Information)
+      .build();
 
     signalrConnection.on('jobUpdated', (message) => {
       fetchJobDetails();
@@ -43,19 +44,19 @@ export default function JobDetails({ route , navigation}) {
     signalrConnection.onclose(() => {
       console.log('Connection closed.');
     });
-    
-    setConnection(signalrConnection); 
+
+    setConnection(signalrConnection);
 
     // Start the connection
     const startConnection = async () => {
-        try {
-            await signalrConnection.start();
-            console.log('SignalR connected.');
-            setConnection(signalrConnection);
-        } catch (err) {
-            console.log('SignalR connection error:', err);
-            setTimeout(startConnection, 5000); // Retry connection after 5 seconds
-        }
+      try {
+        await signalrConnection.start();
+        console.log('SignalR connected.');
+        setConnection(signalrConnection);
+      } catch (err) {
+        console.log('SignalR connection error:', err);
+        setTimeout(startConnection, 5000); // Retry connection after 5 seconds
+      }
     };
 
     startConnection();
@@ -74,15 +75,15 @@ export default function JobDetails({ route , navigation}) {
       body: JSON.stringify({
         PartitionKey: job.Owner,
         Status: 'pending',
-        Walker: walkerName
+        Walker: walkerName,
       }),
     })
-    .then((response) => response.json())
-    .then((updatedJob) => {
-      setJob(updatedJob);
-      setTakeJobModalVisible(false);
-    })
-    .catch((error) => console.error('Error updating job status:', error));
+      .then((response) => response.json())
+      .then((updatedJob) => {
+        setJob(updatedJob);
+        setTakeJobModalVisible(false);
+      })
+      .catch((error) => console.error('Error updating job status:', error));
     setTakeJobModalVisible(false);
   };
 
@@ -95,14 +96,14 @@ export default function JobDetails({ route , navigation}) {
       body: JSON.stringify({
         PartitionKey: job.Owner,
         Status: 'Available',
-        Walker: 'None'
+        Walker: 'None',
       }),
     })
-    .then((response) => response.json())
-    .then((updatedJob) => {
-      setJob(updatedJob);
-    })
-    .catch((error) => console.error('Error updating job status:', error));
+      .then((response) => response.json())
+      .then((updatedJob) => {
+        setJob(updatedJob);
+      })
+      .catch((error) => console.error('Error updating job status:', error));
   };
 
   const handleStartJob = () => {
@@ -111,32 +112,60 @@ export default function JobDetails({ route , navigation}) {
 
   const handleConfirmStartJob = () => {
     if (password === job.Password) {
-      fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Start watching the client's position when the job starts
+      const navigatorId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log('New Position:', { latitude, longitude });
+          setClientLocation({ latitude, longitude }); // Update the client's location locally
+  
+          // Send the updated location to the server
+          fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              PartitionKey: job.Owner,
+              Status: 'active',
+              Latitude: latitude,
+              Longitude: longitude,
+            }),
+          })
+          .then((response) => response.json())
+          .then((updatedJob) => {
+            setJob(updatedJob); // Update the job state with the new job data
+          })
+          .catch((error) => console.error('Error updating job status:', error));
         },
-        body: JSON.stringify({
-          PartitionKey: job.Owner,
-          Status: 'active'
-        }),
-      })
-      .then((response) => response.json())
-      .then((updatedJob) => {
-        setJob(updatedJob);
-        setStartJobModalVisible(false);
-        setPassword('');
-        setErrorMessage('');
-      })
-      .catch((error) => console.error('Error updating job status:', error));
+        (error) => {
+          console.error('Error fetching location:', error);
+          setErrorMessage('Unable to fetch location. Please try again.');
+        },
+        {
+          enableHighAccuracy: true, // Request high accuracy for better precision
+          timeout: 1000,
+          maximumAge: 0,
+        }
+      );
+  
+      setWatchId(navigatorId); // Store the watch ID so you can clear it later
       setStartJobModalVisible(false);
+      setPassword('');
+      setErrorMessage('');
     } else {
       setErrorMessage('Incorrect password, please try again.');
-      setStartJobModalVisible(false);
     }
   };
-
+  
   const handleEndJob = () => {
+    // Stop watching the client's position
+    if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      setWatchId(null); // Reset watch ID
+    }
+  
+    // Update the job status to "Terminate"
     fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
       method: 'POST',
       headers: {
@@ -145,16 +174,16 @@ export default function JobDetails({ route , navigation}) {
       body: JSON.stringify({
         PartitionKey: job.Owner,
         Status: 'Terminate',
-        Walker: 'None'
+        Walker: 'None',
       }),
     })
-    .then((response) => response.json())
-    .then((updatedJob) => {
-      setJob(updatedJob);
-    })
-    .catch((error) => console.error('Error updating job status:', error));
+      .then((response) => response.json())
+      .then((updatedJob) => {
+        setJob(updatedJob);
+      })
+      .catch((error) => console.error('Error updating job status:', error));
   };
-
+  
   if (!job) {
     return (
       <View style={styles.container}>
@@ -163,15 +192,16 @@ export default function JobDetails({ route , navigation}) {
     );
   }
 
-  const takeOrReleaseButton = job.Status === 'pending' ? (
-    <TouchableOpacity style={styles.button} onPress={handleReleaseJob}>
-      <Text style={styles.buttonText}>Release the Job</Text>
-    </TouchableOpacity>
-  ) : (
-    <TouchableOpacity style={styles.button} onPress={handleTakeJob} disabled={job.Status !== 'Available'}>
-      <Text style={styles.buttonText}>Take the Job</Text>
-    </TouchableOpacity>
-  );
+  const takeOrReleaseButton =
+    job.Status === 'pending' ? (
+      <TouchableOpacity style={styles.button} onPress={handleReleaseJob}>
+        <Text style={styles.buttonText}>Release the Job</Text>
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity style={styles.button} onPress={handleTakeJob} disabled={job.Status !== 'Available'}>
+        <Text style={styles.buttonText}>Take the Job</Text>
+      </TouchableOpacity>
+    );
 
   return (
     <View style={styles.container}>
@@ -206,7 +236,9 @@ export default function JobDetails({ route , navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-      <MapComponent latitude={parseFloat(job.Latitude)} longitude={parseFloat(job.Longitude)} />
+      <MapComponent 
+          latitude={clientLocation ? parseFloat(clientLocation.latitude) : parseFloat(job.Latitude)} 
+          longitude={clientLocation ? parseFloat(clientLocation.longitude) : parseFloat(job.Longitude)} />
 
       <Modal
         animationType="slide"

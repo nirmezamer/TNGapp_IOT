@@ -21,7 +21,7 @@ const MapComponent = ({ latitude, longitude }) => {
 
       const map = new atlas.Map('myMap', {
         center: [longitude || 34.7818, latitude || 32.0853], // Use provided coordinates or default to Tel Aviv
-        zoom: 12,
+        zoom: 20,
         view: 'Auto',
         authOptions: {
           authType: 'subscriptionKey',
