@@ -193,15 +193,22 @@ export default function JobDetails({ route , navigation}) {
   }
 
   const takeOrReleaseButton =
-    job.Status === 'pending' ? (
-      <TouchableOpacity style={styles.button} onPress={handleReleaseJob}>
-        <Text style={styles.buttonText}>Release the Job</Text>
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity style={styles.button} onPress={handleTakeJob} disabled={job.Status !== 'Available'}>
-        <Text style={styles.buttonText}>Take the Job</Text>
-      </TouchableOpacity>
-    );
+  job.Status === 'pending' ? (
+    <TouchableOpacity style={styles.button} onPress={handleReleaseJob}>
+      <Text style={styles.buttonText}>Release the Job</Text>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity
+      style={[
+        styles.button,
+        (job.Status === 'active' || job.Status === 'Terminate') && styles.buttonDisabled,
+      ]}
+      onPress={handleTakeJob}
+      disabled={job.Status !== 'Available'} // Ensure it is disabled when the job is active
+    >
+      <Text style={styles.buttonText}>Take the Job</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
