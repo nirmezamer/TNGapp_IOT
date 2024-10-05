@@ -81,7 +81,6 @@ export default function JobDetails({ route , navigation}) {
     .then((updatedJob) => {
       setJob(updatedJob);
       setTakeJobModalVisible(false);
-      fetchJobDetails(); // Refresh the page
     })
     .catch((error) => console.error('Error updating job status:', error));
     setTakeJobModalVisible(false);
@@ -102,7 +101,6 @@ export default function JobDetails({ route , navigation}) {
     .then((response) => response.json())
     .then((updatedJob) => {
       setJob(updatedJob);
-      fetchJobDetails(); // Refresh the page
     })
     .catch((error) => console.error('Error updating job status:', error));
   };
@@ -129,7 +127,6 @@ export default function JobDetails({ route , navigation}) {
         setStartJobModalVisible(false);
         setPassword('');
         setErrorMessage('');
-        fetchJobDetails(); // Refresh the page
       })
       .catch((error) => console.error('Error updating job status:', error));
       setStartJobModalVisible(false);
@@ -154,7 +151,6 @@ export default function JobDetails({ route , navigation}) {
     .then((response) => response.json())
     .then((updatedJob) => {
       setJob(updatedJob);
-      fetchJobDetails(); // Refresh the page
     })
     .catch((error) => console.error('Error updating job status:', error));
   };

@@ -147,10 +147,10 @@ def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             # Trigger SignalR notification to clients
             signalRHub.set(json.dumps({
                 'target': 'jobUpdated',
-                'arguments': [entity]
+                'arguments': [json.dumps(entity)]
             }))
 
-            return func.HttpResponse(f"Job updated successfully:\n {entity}", status_code=200)
+            return func.HttpResponse(json.dumps(entity), status_code=200)
     except Exception as e:
         logging.error(f"Error: {e}")
         return func.HttpResponse("Error", status_code=500)
