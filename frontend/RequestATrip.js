@@ -51,7 +51,7 @@ const RequestATrip = () => {
 
     console.log('Sending request to server:', requestBody);
 
-    fetch(`${config.getBaseUrl()}/api/InsertJob`, {
+    fetch(`${config.getBaseUrl()}/api/InsertJob?authToken=${localStorage.getItem('authToken')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,6 +61,10 @@ const RequestATrip = () => {
       .then((response) => {
         console.log('Response status:', response.status);
         return response.text().then((text) => {
+          if (response.status === 401) {
+            // Navigate to the SignIn page if status is 401
+            navigation.navigate('SignIn');
+          }
           if (response.ok) {
             console.log('Request submitted successfully:', text);
             navigation.navigate('DogOwner');

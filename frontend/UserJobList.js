@@ -10,8 +10,15 @@ export default function UserJobList({ route }) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch(`${config.getBaseUrl()}/api/GetAllJobs/${user_name}`)
-      .then((response) => response.json())
+    fetch(`${config.getBaseUrl()}/api/GetAllJobs/${user_name}?authToken=${localStorage.getItem('authToken')}`)
+      .then((response) => {
+        if (response.status === 401) {
+          // Navigate to the SignIn page if status is 401
+          navigation.navigate('SignIn');
+        } else {
+          return response.json(); // Only parse JSON if response is not 401
+        }
+      })
       .then((data) => setJobs(data))
       .catch((error) => console.error('Error fetching jobs:', error));
   }, [user_name]);

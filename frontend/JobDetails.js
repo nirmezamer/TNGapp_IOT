@@ -17,8 +17,15 @@ export default function JobDetails({ route , navigation}) {
   const [watchId, setWatchId] = useState(null); // Store the geolocation watch ID
 
   const fetchJobDetails = () => {
-    fetch(`${config.getBaseUrl()}/api/GetJob/${id}`)
-      .then((response) => response.json())
+    fetch(`${config.getBaseUrl()}/api/GetJob/${id}?authToken=${localStorage.getItem('authToken')}`) 
+        .then((response) => {
+          if (response.status === 401) {
+            // Navigate to the SignIn page if status is 401
+            navigation.navigate('SignIn');
+          } else {
+            return response.json(); // Only parse JSON if response is not 401
+          }
+        })
       .then((data) => setJob(data))
       .catch((error) => console.error('Error fetching job details:', error));
   };
@@ -67,7 +74,7 @@ export default function JobDetails({ route , navigation}) {
   };
 
   const handleConfirmTakeJob = () => {
-    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}?authToken=${localStorage.getItem('authToken')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +85,14 @@ export default function JobDetails({ route , navigation}) {
         Walker: walkerName,
       }),
     })
-      .then((response) => response.json())
+    .then((response) => {
+      if (response.status === 401) {
+        // Navigate to the SignIn page if status is 401
+        navigation.navigate('SignIn');
+      } else {
+        return response.json(); // Only parse JSON if response is not 401
+      }
+    })
       .then((updatedJob) => {
         setJob(updatedJob);
         setTakeJobModalVisible(false);
@@ -88,7 +102,7 @@ export default function JobDetails({ route , navigation}) {
   };
 
   const handleReleaseJob = () => {
-    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}?authToken=${localStorage.getItem('authToken')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -99,7 +113,14 @@ export default function JobDetails({ route , navigation}) {
         Walker: 'None',
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 401) {
+          // Navigate to the SignIn page if status is 401
+          navigation.navigate('SignIn');
+        } else {
+          return response.json(); // Only parse JSON if response is not 401
+        }
+      })
       .then((updatedJob) => {
         setJob(updatedJob);
       })
@@ -120,7 +141,7 @@ export default function JobDetails({ route , navigation}) {
           setClientLocation({ latitude, longitude }); // Update the client's location locally
   
           // Send the updated location to the server
-          fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
+          fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}?authToken=${localStorage.getItem('authToken')}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -132,7 +153,14 @@ export default function JobDetails({ route , navigation}) {
               Longitude: longitude,
             }),
           })
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.status === 401) {
+              // Navigate to the SignIn page if status is 401
+              navigation.navigate('SignIn');
+            } else {
+              return response.json(); // Only parse JSON if response is not 401
+            }
+          })
           .then((updatedJob) => {
             setJob(updatedJob); // Update the job state with the new job data
           })
@@ -166,7 +194,7 @@ export default function JobDetails({ route , navigation}) {
     }
   
     // Update the job status to "Terminate"
-    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}`, {
+    fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}?authToken=${localStorage.getItem('authToken')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +205,14 @@ export default function JobDetails({ route , navigation}) {
         Walker: 'None',
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 401) {
+          // Navigate to the SignIn page if status is 401
+          navigation.navigate('SignIn');
+        } else {
+          return response.json(); // Only parse JSON if response is not 401
+        }
+      })
       .then((updatedJob) => {
         setJob(updatedJob);
       })

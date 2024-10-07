@@ -45,6 +45,30 @@ def auth_google(req: func.HttpRequest) -> func.HttpResponse:
         logging.error(f"Error in auth_google: {e}")
         return func.HttpResponse(f"Error in auth_google: {e}", status_code=500)
 
+import jwt  # Import PyJWT
+import time  # To handle token expiration
+
+SECRET_KEY = GOOGLE_CLIENT_SECRET
+
+def generate_token(user_info):
+    expiration_time = time.time() + 3600  # Token valid for 1 hour
+    payload = {
+        "sub": user_info["email"],  # Unique identifier (e.g., user's email)
+        "name": user_info["name"],  # User's name
+        "aud": "https://tngapp1.azurewebsites.net",
+        "exp": expiration_time  # Expiration time
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    return token
+
+def validate_token(token):
+    try:
+        # Decode the token without verifying audience
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"], options={"verify_aud": False})    
+        return decoded_token  # Valid token
+    except:
+        return None  # Invalid token
+
 @google.route(route="auth/google/callback")
 def callback(req: func.HttpRequest) -> func.HttpResponse:
     try:
@@ -82,14 +106,32 @@ def callback(req: func.HttpRequest) -> func.HttpResponse:
         userinfo_response = requests.get(uri, headers=headers, data=body)
         logging.info(f"Userinfo response: {userinfo_response.json()}")
 
+        # Check if email is verified and generate a token
         if userinfo_response.json().get("email_verified"):
-            # Redirect to the front-end page with a success message
-            return func.HttpResponse(status_code=302, headers={"Location": "http://localhost:8081/GoodEntrance"})  # Update to match your frontend URL
+            user_info = userinfo_response.json()  # Get user info
+
+            # Generate JWT token
+            token = generate_token(user_info)
+
+            # Redirect with the token as a query parameter
+            redirect_url = f"http://localhost:8081/GoodEntrance?token={token}"
+            return func.HttpResponse(status_code=302, headers={"Location": redirect_url})
         else:
             logging.error("User email not verified")
             return func.HttpResponse("User email not verified", status_code=400)
+    
     except Exception as e:
         logging.error(f"Error in callback: {e}")
         return func.HttpResponse(f"Error in callback: {e}", status_code=500)
 
 
+@google.route(route="test", auth_level=func.AuthLevel.ANONYMOUS)
+def test(req: func.HttpRequest) -> func.HttpResponse:
+    token = req.params.get('authToken')
+    logging.info(f"Token: {token}")
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    logging.info(f"Decoded token: {decoded_token}")
+    logging.info(f"name: {decoded_token['name']}")
+    return func.HttpResponse(f"{decoded_token}", status_code=200)

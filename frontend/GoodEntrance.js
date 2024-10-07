@@ -1,11 +1,29 @@
 // GoodEntrance.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, Button, Image } from 'react-native';
 
 const dogImage = require('./dog_pic.jpg'); // Path to your image
 
 
 export default function GoodEntrance({ navigation }) {
+
+  useEffect(() => {
+    const storeToken = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');  // Get the token from URL parameters
+
+      if (token) {
+        // Store token in localStorage
+        localStorage.setItem('authToken', token);
+
+        // Optionally, navigate the user somewhere after storing the token
+        // e.g., to the homepage or dashboard
+      }
+    };
+
+    storeToken();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the App!</Text>

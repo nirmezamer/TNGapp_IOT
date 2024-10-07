@@ -9,7 +9,17 @@ GET http://localhost:7071/api/GetAllJobs
 ###
 
 GET https://tngapp1.azurewebsites.net/api/GetAllJobs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaXJtZXphbWVyQG1haWwudGF1LmFjLmlsIiwibmFtZSI6Ik5pciBNZXphbWVyIiwiYXVkIjoiaHR0cHM6Ly90bmdhcHAxLmF6dXJld2Vic2l0ZXMubmV0IiwiZXhwIjoxNzI4MjQxODg0LjM2NDk2NjZ9.Qq2Wi7vYb2bPvDj-AOAUJf7rvbBfvIJuyrRZ0RYBldY
+Content-Type: application/json
 
 ###
 
 GET https://tngapp1.azurewebsites.net/api/UpdateAllJobs
+
+###
+
+GET http://localhost:7071/api/test?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaXJtZXphbWVyQG1haWwudGF1LmFjLmlsIiwibmFtZSI6Ik5pciBNZXphbWVyIiwiYXVkIjoiaHR0cHM6Ly90bmdhcHAxLmF6dXJld2Vic2l0ZXMubmV0IiwiZXhwIjoxNzI4MjQ1NjI2LjU1MTk5NX0.vAPFE4UWzR9OK21K-yIXEaNVv9-7iCqJ2FdHwgS6rSs
+
+###
+
+GET http://localhost:7071/api/test

@@ -3,6 +3,7 @@ import logging
 import os
 import json
 from azure.data.tables import TableClient
+from .google import validate_token
 
 jobs = func.Blueprint()
 
@@ -10,6 +11,13 @@ jobs = func.Blueprint()
 @jobs.generic_output_binding(arg_name="signalRHub", type="signalR", hubName="mySignalRHub", connectionStringSetting="AzureSignalRConnectionString")
 def InsertJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    
+    # Validate the token
+    token = req.params.get('authToken')
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    name = decoded_token['name']
     
     connection_string = os.getenv("AzureWebJobsStorage")
     try:
@@ -57,6 +65,13 @@ def RemoveJob(req: func.HttpRequest) -> func.HttpResponse:
 def GetAllJobs(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     
+    # Validate the token
+    token = req.params.get('authToken')
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    name = decoded_token['name']
+    
     connection_string = os.getenv("AzureWebJobsStorage")
     try:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
@@ -72,6 +87,13 @@ def GetAllJobs(req: func.HttpRequest) -> func.HttpResponse:
 def GetAllJobsOfOwner(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('GetAllJobsOfOwner function processed a request.')
     logging.info(f"Owner: {req.route_params['owner']}")
+    
+    # Validate the token
+    token = req.params.get('authToken')
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    name = decoded_token['name']
     
     _owner = req.route_params['owner'].replace('_', ' ')
     
@@ -92,6 +114,13 @@ def GetAllJobsOfOwner(req: func.HttpRequest) -> func.HttpResponse:
 @jobs.route(route="GetJob/{id}", auth_level=func.AuthLevel.ANONYMOUS, methods=["GET"])    
 def GetJobById(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('GetJobById function processed a request.')
+    
+    # Validate the token
+    token = req.params.get('authToken')
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    name = decoded_token['name']
     
     _id = req.route_params['id']
     _owner = _id.split(";")[0]

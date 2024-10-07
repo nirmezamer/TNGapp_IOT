@@ -10,8 +10,16 @@ export default function DogWalker({ navigation }) {
 
   useEffect(() => {
     const fetchJobs = () => {
-      fetch(`${config.getBaseUrl()}/api/GetAllJobs`)
-        .then((response) => response.json())
+      // Fetch jobs with the token
+      fetch(`${config.getBaseUrl()}/api/GetAllJobs?authToken=${localStorage.getItem('authToken')}`) 
+        .then((response) => {
+          if (response.status === 401) {
+            // Navigate to the SignIn page if status is 401
+            navigation.navigate('SignIn');
+          } else {
+            return response.json(); // Only parse JSON if response is not 401
+          }
+        })
         .then((data) => setJobs(data))
         .catch((error) => console.error('Error fetching jobs:', error));
     };
