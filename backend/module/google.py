@@ -112,9 +112,10 @@ def callback(req: func.HttpRequest) -> func.HttpResponse:
 
             # Generate JWT token
             token = generate_token(user_info)
+            user_name = user_info["name"]
 
             # Redirect with the token as a query parameter
-            redirect_url = f"http://localhost:8081/GoodEntrance?token={token}"
+            redirect_url = f"http://localhost:8081/GoodEntrance?token={token}&user_name={user_name}"
             return func.HttpResponse(status_code=302, headers={"Location": redirect_url})
         else:
             logging.error("User email not verified")
@@ -125,6 +126,7 @@ def callback(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(f"Error in callback: {e}", status_code=500)
 
 
+# Not suposed to be in use
 @google.route(route="test", auth_level=func.AuthLevel.ANONYMOUS)
 def test(req: func.HttpRequest) -> func.HttpResponse:
     token = req.params.get('authToken')

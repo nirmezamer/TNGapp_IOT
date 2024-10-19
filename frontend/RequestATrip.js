@@ -36,7 +36,6 @@ const RequestATrip = () => {
 
   const handleSubmit = () => {
     const requestBody = {
-      Owner: ownerName,
       Dog: dogName,
       Password: password,
       City: city,
@@ -87,13 +86,6 @@ const RequestATrip = () => {
 
   return (
     <View style={styles.container}>
-
-      <Text style={styles.label}>Owner Name:</Text>
-      <TextInput
-        style={styles.input}
-        value={ownerName}
-        onChangeText={setOwnerName}
-      />
 
       <Text style={styles.label}>Dog Name:</Text>
       <TextInput

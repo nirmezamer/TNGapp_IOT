@@ -11,13 +11,13 @@ export default function GoodEntrance({ navigation }) {
     const storeToken = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');  // Get the token from URL parameters
+      const user_name = urlParams.get('user_name');  // Get the user_name from URL parameters
 
       if (token) {
-        // Store token in localStorage
         localStorage.setItem('authToken', token);
-
-        // Optionally, navigate the user somewhere after storing the token
-        // e.g., to the homepage or dashboard
+      }
+      if (user_name) {
+        localStorage.setItem('user_name', user_name);
       }
     };
 

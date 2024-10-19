@@ -13,7 +13,7 @@ const DogOwner = () => {
   };
   
   const goToGetAllUserJobs = () => {
-    navigation.navigate('GetAllUserJobs');
+    navigation.navigate('UserJobList');
   };
 
   return (

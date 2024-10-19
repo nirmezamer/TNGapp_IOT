@@ -17,14 +17,16 @@ def InsertJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
     decoded_token = validate_token(token)
     if not decoded_token:
         return func.HttpResponse("Invalid token", status_code=401)
-    name = decoded_token['name']
+    user_name = decoded_token['name']
+    logging.info(f"InsertJob for user: {user_name}")
     
     connection_string = os.getenv("AzureWebJobsStorage")
     try:
         with TableClient.from_connection_string(connection_string, table_name="jobs") as table:
             req_body = req.get_json()
-            req_body["PartitionKey"] = req_body["Owner"]
-            req_body["RowKey"] = f"{req_body['Owner'].replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
+            req_body["PartitionKey"] = user_name
+            req_body["Owner"] = user_name
+            req_body["RowKey"] = f"{user_name.replace(' ', '_')};{req_body['Date']};{req_body['Time']}"
             req_body["Status"] = "Available"
             req_body["Walker"] = "None"
 
@@ -94,6 +96,8 @@ def GetAllJobsOfOwner(req: func.HttpRequest) -> func.HttpResponse:
     if not decoded_token:
         return func.HttpResponse("Invalid token", status_code=401)
     name = decoded_token['name']
+    if name != req.route_params['owner']:
+        return func.HttpResponse("Unauthorized", status_code=401)
     
     _owner = req.route_params['owner'].replace('_', ' ')
     
@@ -169,6 +173,13 @@ def UpdateAllJobs(req: func.HttpRequest) -> func.HttpResponse:
 @jobs.generic_output_binding(arg_name="signalRHub", type="signalR", hubName="mySignalRHub", connectionStringSetting="AzureSignalRConnectionString")
 def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResponse:
     logging.info('UpdateJob function processed a request.')
+    
+    # Validate the token
+    token = req.params.get('authToken')
+    decoded_token = validate_token(token)
+    if not decoded_token:
+        return func.HttpResponse("Invalid token", status_code=401)
+    user_name = decoded_token['name']
 
     connection_string = os.getenv("AzureWebJobsStorage")
     try:
@@ -176,6 +187,10 @@ def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             req_body = req.get_json()
             partition_key = req_body.pop("PartitionKey")
             row_key = req.route_params['id']
+            
+            if "TakeJob" in req_body and req_body["TakeJob"]:
+                req_body["Walker"] = user_name
+                req_body.pop("TakeJob")
 
             # Fetch the entity from the table
             entity = table.get_entity(partition_key=partition_key, row_key=row_key)

@@ -4,10 +4,15 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native
 import { useNavigation } from '@react-navigation/native';
 import config from './config';
 
-export default function UserJobList({ route }) {
-  const { user_name } = route.params;
-  const [jobs, setJobs] = useState([]);
+export default function UserJobList() {
   const navigation = useNavigation();
+  const user_name = localStorage.getItem('user_name');
+  useEffect(() => {
+    if (!user_name) {
+      navigation.navigate('SignIn');
+    }
+  }, [user_name, navigation]);
+  const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     fetch(`${config.getBaseUrl()}/api/GetAllJobs/${user_name}?authToken=${localStorage.getItem('authToken')}`)

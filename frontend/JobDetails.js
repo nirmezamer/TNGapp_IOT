@@ -7,9 +7,7 @@ import config from './config';
 export default function JobDetails({ route , navigation}) {
   const { id } = route.params; // Get the job ID from the route parameters
   const [job, setJob] = useState(null);
-  const [takeJobModalVisible, setTakeJobModalVisible] = useState(false);
   const [startJobModalVisible, setStartJobModalVisible] = useState(false);
-  const [walkerName, setWalkerName] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [connection, setConnection] = useState(null);
@@ -70,10 +68,6 @@ export default function JobDetails({ route , navigation}) {
   }, []);
 
   const handleTakeJob = () => {
-    setTakeJobModalVisible(true);
-  };
-
-  const handleConfirmTakeJob = () => {
     fetch(`${config.getBaseUrl()}/api/UpdateJob/${id}?authToken=${localStorage.getItem('authToken')}`, {
       method: 'POST',
       headers: {
@@ -82,7 +76,7 @@ export default function JobDetails({ route , navigation}) {
       body: JSON.stringify({
         PartitionKey: job.Owner,
         Status: 'pending',
-        Walker: walkerName,
+        TakeJob: true,
       }),
     })
     .then((response) => {
@@ -95,10 +89,8 @@ export default function JobDetails({ route , navigation}) {
     })
       .then((updatedJob) => {
         setJob(updatedJob);
-        setTakeJobModalVisible(false);
       })
       .catch((error) => console.error('Error updating job status:', error));
-    setTakeJobModalVisible(false);
   };
 
   const handleReleaseJob = () => {
@@ -281,25 +273,6 @@ export default function JobDetails({ route , navigation}) {
       <MapComponent 
           latitude={clientLocation ? parseFloat(clientLocation.latitude) : parseFloat(job.Latitude)} 
           longitude={clientLocation ? parseFloat(clientLocation.longitude) : parseFloat(job.Longitude)} />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={takeJobModalVisible}
-        onRequestClose={() => setTakeJobModalVisible(false)}
-      >
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Enter your name:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Dog Walker Name"
-            value={walkerName}
-            onChangeText={setWalkerName}
-          />
-          <Button title="Confirm" onPress={handleConfirmTakeJob} />
-          <Button title="Cancel" onPress={() => setTakeJobModalVisible(false)} />
-        </View>
-      </Modal>
 
       <Modal
         animationType="slide"
