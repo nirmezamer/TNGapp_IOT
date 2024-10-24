@@ -18,7 +18,7 @@
     "@types/react": "~18.2.79",
     "azure-maps-control": "^3.1.2",
     "date-fns": "^3.6.0",
-    "expo": "~51.0.24",
+    "expo": "^51.0.38",
     "expo-linking": "^6.3.1",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
@@ -34,7 +34,8 @@
     "typescript": "~5.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@types/react-native": "~0.67.6"
   },
   "private": true
 }
