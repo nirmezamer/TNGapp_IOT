@@ -50,7 +50,7 @@ export default function JobDetails({ route, navigation }) {
       .configureLogging(SignalR.LogLevel.Information)
       .build();
 
-    signalrConnection.on('jobUpdated', (message) => {fetchJobDetails();});
+    signalrConnection.on(`jobUpdated_${id}`, (message) => {fetchJobDetails();});
 
     signalrConnection.onclose(() => console.log('Connection closed.'));
     setConnection(signalrConnection);
@@ -59,7 +59,6 @@ export default function JobDetails({ route, navigation }) {
       try {
         await signalrConnection.start();
         console.log('SignalR connected.');
-        signalrConnection.on('jobUpdated', (message) => {fetchJobDetails();});
         setConnection(signalrConnection);
       } catch (err) {
         console.log('SignalR connection error:', err);

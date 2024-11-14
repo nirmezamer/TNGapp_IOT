@@ -199,10 +199,9 @@ def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             
             # Update the entity
             table.update_entity(entity=entity, mode="merge")
-
             # Trigger SignalR notification to clients
             signalRHub.set(json.dumps({
-                'target': 'jobUpdated',
+                'target': 'jobUpdated' + '_' + row_key,
                 'arguments': [json.dumps(entity)]
             }))
 

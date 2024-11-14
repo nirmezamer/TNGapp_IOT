@@ -53,7 +53,7 @@ export default function JobDetails({ route , navigation}) {
       .configureLogging(SignalR.LogLevel.Information)
       .build();
 
-    signalrConnection.on('jobUpdated', (message) => {
+    signalrConnection.on(`jobUpdated_${id}`, (message) => {
       fetchJobDetails();
     });
 

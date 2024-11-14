@@ -13,7 +13,7 @@ export default function GoodEntrance({ navigation }) {
       const url = await Linking.getInitialURL();
       if (url) {
         // const urlParams = new URLSearchParams(url.split('?')[1]);
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b21lcnZhcmRpQG1haWwudGF1LmFjLmlsIiwibmFtZSI6IlRvbWVyIFZhcmRpIiwiYXVkIjoiaHR0cHM6Ly90bmdhcHAxLmF6dXJld2Vic2l0ZXMubmV0IiwiZXhwIjoxNzMxNjA2ODgzLjEwNDEzOTh9.-yWq2nUoHwdG0Q0__FI5FgzDnMbqCanPwysJ6_hlv_4";
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b21lcnZhcmRpQG1haWwudGF1LmFjLmlsIiwibmFtZSI6IlRvbWVyIFZhcmRpIiwiYXVkIjoiaHR0cHM6Ly90bmdhcHAxLmF6dXJld2Vic2l0ZXMubmV0IiwiZXhwIjoxNzMxNjE0MDQ5Ljc5ODc5Nzh9.-by9-geFHaRpwE8XPQ-_p-2qUw_xbvQWhEto9_QGkYM";
         const user_name = "Tomer Vardi";
         if (token) {
           await AsyncStorage.setItem('authToken', token);
