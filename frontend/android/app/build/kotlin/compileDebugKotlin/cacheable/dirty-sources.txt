@@ -1,0 +1,2 @@
+C:\Users\User\TNGapp_IOT\frontend\android\app\src\main\java\com\mycounter\MainActivity.kt
+C:\Users\User\TNGapp_IOT\frontend\android\app\src\main\java\com\mycounter\MainApplication.kt

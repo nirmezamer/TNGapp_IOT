@@ -1,23 +1,31 @@
-import 'react-native-gesture-handler'; // Make sure this is at the top of your file
+// import 'react-native-gesture-handler'; // Ensure this is at the top
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as Linking from 'expo-linking';
+// import { createStackNavigator } from '@react-navigation/stack';
 import DogOwner from './DogOwner';
 import RequestATrip from './RequestATrip';
 import DogWalker from './DogWalker';
-import WhereIsMyDog from './WhereIsMyDog';
-import SignIn from './SignIn'; // Import SignIn
-import SignUp from './SignUp'; // Import SignUp
-import GoodEntrance from './GoodEntrance'; // Import GoodEntrance
-import WorkAJob from './WorkAJob'; // Import WorkAJob
-import JobDetails from './JobDetails'; // Import JobDetails (new page)
-import HomeButton from './HomeButton'; // Import HomeButton
-import UserJobList from './UserJobList'; // Import UserJobList
-import "./app.css";
+import SignIn from './SignIn';
+import GoodEntrance from './GoodEntrance';
+// import WorkAJob from './WorkAJob';
+import JobDetails from './JobDetails';
+import HomeButton from './HomeButton';
+import UserJobList from './UserJobList';
 
-const dogImage = require('./dog_pic.jpg'); // Path to your image
+let createStackNavigator;
+
+
+if (Platform.OS === 'web') {
+  createStackNavigator = require('@react-navigation/stack').createStackNavigator;
+}
+
+else {
+  createStackNavigator =  require('@react-navigation/native-stack').createNativeStackNavigator;
+}
+
+
+const dogImage = require('./dog_pic.jpg'); // Ensure the image path is correct
 
 const Stack = createStackNavigator();
 
@@ -63,34 +71,31 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     alignItems: 'center',
-    justifyContent: 'center', // Ensure content is centered horizontally
+    justifyContent: 'center',
     borderRadius: 5,
     borderColor: '#ccc',
     borderWidth: 1,
-    width: 150, // You can adjust this width to your needs
+    width: 150,
   },
   signInButtonText: {
     color: '#333',
     fontSize: 16,
-    textAlign: 'center', // Center the text inside the button
+    textAlign: 'center',
   },
 });
 
 export default function App() {
   const linking = {
-    prefixes: [Linking.createURL('/')],
+    // prefixes: [Linking.createURL('/')],
     config: {
       screens: {
         Home: '',
         SignIn: 'signin',
-        SignUp: 'signup',
         GoodEntrance: 'GoodEntrance',
         DogOwner: 'DogOwner',
         DogWalker: 'DogWalker',
         RequestATrip: 'RequestATrip',
-        WhereIsMyDog: 'WhereIsMyDog',
-        WorkAJob: 'WorkAJob',
-        JobDetails: 'jobs/:id', // Add dynamic job details screen
+        JobDetails: 'jobs/:id',
         UserJobList: 'GetAllUserJobs/:user_name',
       },
     },
@@ -99,21 +104,20 @@ export default function App() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName={'Home'}
         screenOptions={({ route }) => ({
           headerRight: () =>
             route.name !== 'Home' && route.name !== 'SignIn' ? <HomeButton /> : null,
+          cardStyle: { height: '100%' },
         })}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="SignIn" component={SignIn} /> 
         <Stack.Screen name="GoodEntrance" component={GoodEntrance} />
         <Stack.Screen name="DogOwner" component={DogOwner} />
         <Stack.Screen name="DogWalker" component={DogWalker} />
-        <Stack.Screen name="WhereIsMyDog" component={WhereIsMyDog} />
         <Stack.Screen name="RequestATrip" component={RequestATrip} />
-        <Stack.Screen name="WorkAJob" component={WorkAJob} />
+        {/* <Stack.Screen name="WorkAJob" component={WorkAJob} /> */}
         <Stack.Screen name="JobDetails" component={JobDetails} />
         <Stack.Screen name="UserJobList" component={UserJobList} />
       </Stack.Navigator>
