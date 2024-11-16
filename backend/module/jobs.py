@@ -4,6 +4,7 @@ import os
 import json
 from azure.data.tables import TableClient
 from .google import validate_token
+from geopy.distance import geodesic
 
 jobs = func.Blueprint()
 
@@ -34,6 +35,7 @@ def InsertJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             if "Latitude" not in req_body or "Longitude" not in req_body:
                 req_body["Latitude"] = 32.0853
                 req_body["Longitude"] = 34.7818
+                req_body["validLocation"] = "None"
 
             table.upsert_entity(entity=req_body, mode="merge")
 
@@ -195,7 +197,16 @@ def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             # Fetch the entity from the table
             entity = table.get_entity(partition_key=partition_key, row_key=row_key)
             for key, value in req_body.items():
+                if key == "Status":
+                    if entity["Status"] == "pending" and value == "active":
+                        entity["StartLatitude"] = req_body["Latitude"]
+                        entity["StartLongitude"] = req_body["Longitude"]
                 entity[key] = value
+            
+            if "Latitude" in entity and "Longitude" in entity and "StartLatitude" in entity and "StartLongitude" in entity:
+                distance = geodesic((entity["StartLatitude"], entity["StartLongitude"]), (entity["Latitude"], entity["Longitude"])).meters
+                bool_distance = distance < 100
+                entity["validLocation"] = str(bool_distance)
             
             # Update the entity
             table.update_entity(entity=entity, mode="merge")

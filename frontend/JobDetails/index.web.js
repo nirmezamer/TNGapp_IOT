@@ -262,6 +262,7 @@ export default function JobDetails({ route , navigation}) {
           <Text style={styles.detail}>Duration: {job.Duration}</Text>
           <Text style={styles.detail}>Status: {job.Status}</Text>
           <Text style={styles.detail}>Walker: {job.Walker}</Text>
+          <Text style={styles.detail}>Valid Location: {job.validLocation} </Text>
         </View>
         <View style={styles.buttonContainer}>
           {takeOrReleaseButton}
