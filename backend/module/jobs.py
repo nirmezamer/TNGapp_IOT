@@ -205,7 +205,7 @@ def UpdateJob(req: func.HttpRequest, signalRHub: func.Out[str]) -> func.HttpResp
             
             if "Latitude" in entity and "Longitude" in entity and "StartLatitude" in entity and "StartLongitude" in entity:
                 distance = geodesic((entity["StartLatitude"], entity["StartLongitude"]), (entity["Latitude"], entity["Longitude"])).meters
-                bool_distance = distance < 100
+                bool_distance = distance < 5000
                 entity["validLocation"] = str(bool_distance)
             
             # Update the entity
