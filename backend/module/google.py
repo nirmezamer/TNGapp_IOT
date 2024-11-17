@@ -51,7 +51,7 @@ import time  # To handle token expiration
 SECRET_KEY = GOOGLE_CLIENT_SECRET
 
 def generate_token(user_info):
-    expiration_time = time.time() + 3600  # Token valid for 1 hour
+    expiration_time = time.time() + (3600*24)  # Token valid for 1 day
     payload = {
         "sub": user_info["email"],  # Unique identifier (e.g., user's email)
         "name": user_info["name"],  # User's name
