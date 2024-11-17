@@ -11,7 +11,7 @@ import config from '../config';
 let DatePicker;
 if (Platform.OS === 'web') {
   DatePicker = require('react-datepicker').default;
-  require('react-datepicker/dist/react-datepicker.css'); // Import styles for the date picker
+  require('react-datepicker/dist/react-datepicker.css');
 }
 
 const cities = [
@@ -42,7 +42,7 @@ const RequestATrip = () => {
   const [address, setAddress] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
   const [apartmentNumber, setApartmentNumber] = useState('');
-  const [phone, setPhone] = useState('+972');
+  const [phone, setPhone] = useState('+972'); // Initialize phone field
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState('');
@@ -59,7 +59,7 @@ const RequestATrip = () => {
       Address: address,
       HouseNumber: houseNumber,
       AppartmentNumber: apartmentNumber,
-      Phone: phone,
+      Phone: phone, // Include phone in the request body
       Date: formattedDate,
       Time: selectedTime,
       Duration: duration,
@@ -78,32 +78,35 @@ const RequestATrip = () => {
         if (response.ok) {
           navigation.navigate('DogOwner');
         } else {
-          return response.text().then((text) => { throw new Error(text || 'Failed to submit'); });
+          return response.text().then((text) => {
+            throw new Error(text || 'Failed to submit');
+          });
         }
       })
       .catch((error) => Alert.alert('Error', error.message));
-  };
-
-  // Inline style for positioning DatePicker on web
-  const datePickerStyle = {
-    position: 'relative',
-    zIndex: 1,
-    alignSelf: 'flex-start', // Aligns to the left
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Dog Name:</Text>
       <TextInput style={styles.input} value={dogName} onChangeText={setDogName} />
-      
+
       <Text style={styles.label}>Job Password:</Text>
       <TextInput style={styles.input} value={password} onChangeText={setPassword} />
-      
+
       <Text style={styles.label}>City:</Text>
       <RNPickerSelect style={pickerSelectStyles} onValueChange={(value) => setCity(value)} items={cities} value={city} />
-      
+
       <Text style={styles.label}>Address:</Text>
       <TextInput style={styles.input} value={address} onChangeText={setAddress} />
+
+      <Text style={styles.label}>Phone:</Text>
+      <TextInput
+        style={styles.input}
+        value={phone}
+        onChangeText={setPhone}
+        keyboardType="phone-pad"
+      />
 
       <Text style={styles.label}>Date:</Text>
       {Platform.OS === 'web' ? (
@@ -112,7 +115,6 @@ const RequestATrip = () => {
           onChange={(selectedDate) => setDate(selectedDate)}
           dateFormat="dd/MM/yyyy"
           className="datepicker-input"
-          style={datePickerStyle} // Apply custom inline style for web
         />
       ) : (
         <>
@@ -156,7 +158,15 @@ const RequestATrip = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
   label: { fontSize: 16, marginVertical: 10 },
-  input: { height: 40, borderColor: '#ddd', borderWidth: 1, borderRadius: 5, paddingHorizontal: 10, marginVertical: 10, width: '100%' },
+  input: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+    width: '100%',
+  },
 });
 
 const pickerSelectStyles = StyleSheet.create({

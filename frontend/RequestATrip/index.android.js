@@ -93,6 +93,13 @@ const RequestATrip = () => {
         <Text style={styles.label}>Address:</Text>
         <TextInput style={styles.input} value={address} onChangeText={setAddress} />
 
+        <Text style={styles.label}>Phone:</Text>
+        <TextInput
+        style={styles.input}
+        value={phone}
+        onChangeText={setPhone}
+        keyboardType="phone-pad"
+      />
         <Text style={styles.label}>Date:</Text>
         <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
         {showDatePicker && (
