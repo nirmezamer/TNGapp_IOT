@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 
 let local;
 if (Platform.OS === 'web') {
-  local = true;
+  local = false;
 } else {
   local = false;
 }
